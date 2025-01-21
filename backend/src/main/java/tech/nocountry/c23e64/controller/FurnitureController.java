@@ -12,6 +12,7 @@ import tech.nocountry.c23e64.service.FurnitureService;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(path = "/furniture")
 public class FurnitureController {
 
