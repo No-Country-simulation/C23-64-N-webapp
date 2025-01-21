@@ -1,7 +1,8 @@
 import { Button, Center, Container, HStack, Image, Text, VStack } from "@chakra-ui/react";
-import React from "react";
+import React, { useContext } from "react";
 import Cards from "../components/Card/Cards";
 import Carousel from "../components/Carrusel/Carousel";
+import { MuebleContext } from "../Context/MuebleContext";
 
 
 const Home = () => {
@@ -29,9 +30,12 @@ const img=[
     'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1770&q=80',
    
 ]
+// const {muebles,setMuebles}=useContext(MuebleContext)
+
   return (
     <VStack h={'100%'} justifyContent={'center'}>
       <Carousel images={img} />
+      
       <HStack>
      {data.map((item)=>
 
