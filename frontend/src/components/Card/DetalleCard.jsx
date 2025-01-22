@@ -32,7 +32,11 @@ const DetalleCard = ({ name, img, description, price, stock }) => {
           <Heading size="2xl" >{name}</Heading>
 
           <Text py="2" fontSize={'xl'}>{description} </Text>
-          <Text py="2" fontSize={'2xl'} color={'tostado'}>$ {price} </Text>
+          <Text 
+          py="2" 
+          fontSize={'2xl'} 
+          color={'tostado'}
+          >$ {price} </Text>
         </CardBody>
 
         <CardFooter>

@@ -17,12 +17,12 @@ const Header = () => {
       <Link to="/nosotros">
         <Button variant="custom">Nosotros</Button>
       </Link>
-      <Link to="/Calendario">
-        <Button variant="custom">Calendario</Button>
-      </Link>
 
       <Link to="/contacto">
         <Button variant="custom">Contacto</Button>
+      </Link>
+      <Link to="/carrito">
+        <Button variant="custom">Carrito</Button>
       </Link>
     </Center>
   );
