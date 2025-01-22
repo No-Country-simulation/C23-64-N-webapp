@@ -24,7 +24,12 @@ const colors = {
     500:"#7F5539",
     600:"#9C6644",
 
-  }
+  },
+  
+  beige:"#F7F3E9",// Ideal para fondos o areas neutras
+  olivaClaro:"#A8B18F",// Para dar un toque natural y fresco.
+  tostado:"#8E6E53",// Agrega calidez y una sensación de lujo.
+  dorado:"#D4A373",//: Aporta elegancia sin ser demasiado llamativo.
 };
 const fonts = {
   heading: "Roboto,Courier New , sans-serif",
