@@ -38,7 +38,7 @@ export const ButtonConfig = defineStyleConfig({
       letterSpacing: "0.3em",
       background: "brown.600",
       _hover: {
-        backgroundColor: "white",
+        backgroundColor: "tostado",
         color: "black",
       },
       _active: {

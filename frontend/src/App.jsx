@@ -4,19 +4,24 @@ import Home from "./pages/Home";
 import { Footer } from "./components/Footer/Footer";
 import Contacto from "./pages/Contacto";
 import { MuebleProvider } from "./Context/MuebleProvider";
+import { Category } from "./pages/Category";
+import Products from "./pages/Products";
+import Product from "./pages/Product";
 
 function App() {
   return (
     <BrowserRouter>
-      <Header />
       <MuebleProvider>
+      <Header />
         <Routes>
           <Route path="/" element={<Home />}></Route>
           <Route path="/contacto" element={<Contacto />}></Route>
-          {/* <Route path="/player/:id" element={<Player />}></Route> */}
+          <Route path="/productos" element={<Products />}></Route>
+          <Route path="/producto/:id" element={<Product />}></Route>
+          <Route path="/category/:id" element={<Category />}></Route>
         </Routes>
-      </MuebleProvider>
       <Footer />
+      </MuebleProvider>
     </BrowserRouter>
   );
 }
