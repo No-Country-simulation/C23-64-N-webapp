@@ -7,7 +7,7 @@ public class FurnitureDto {
 
     private String name;
 
-    private String type;
+    private String category;
 
     private Integer stock;
 
@@ -33,12 +33,12 @@ public class FurnitureDto {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getStock() {
