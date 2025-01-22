@@ -20,7 +20,7 @@ public class FurnitureEntity {
     private String name;
 
     @NotNull
-    private String type;
+    private String category;
 
     @NotNull
     @PositiveOrZero
@@ -52,12 +52,12 @@ public class FurnitureEntity {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(String type) {
+        this.category = type;
     }
 
     public Integer getStock() {

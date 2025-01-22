@@ -12,7 +12,7 @@ public class FurnitureUpdateDto {
     @Size(max = 100, message = "El nombre del producto no puede superar los 100 caracteres")
     private String name;
 
-    private String type;
+    private String category;
 
     @PositiveOrZero(message = "El total de existencias debe ser mayor o igual a 0")
     private Integer stock;
@@ -33,12 +33,12 @@ public class FurnitureUpdateDto {
         this.name = name;
     }
 
-    public String getType() {
-        return type;
+    public String getCategory() {
+        return category;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public Integer getStock() {

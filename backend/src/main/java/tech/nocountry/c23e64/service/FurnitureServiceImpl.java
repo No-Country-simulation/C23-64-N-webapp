@@ -42,8 +42,8 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (updateDto.getName() != null) {
             furnitureEntity.setName(updateDto.getName());
         }
-        if (updateDto.getType() != null) {
-            furnitureEntity.setType(updateDto.getType());
+        if (updateDto.getCategory() != null) {
+            furnitureEntity.setCategory(updateDto.getCategory());
         }
         if (updateDto.getStock() != null) {
             furnitureEntity.setStock(updateDto.getStock());
@@ -57,8 +57,6 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (updateDto.getImageUri() != null) {
             furnitureEntity.setImageUri(updateDto.getImageUri());
         }
-
-        System.out.println(furnitureEntity.getName());
 
         furnitureRepository.save(furnitureEntity);
         return FurnitureMapper.toDto(furnitureEntity);
