@@ -37,16 +37,14 @@ const img=[
       <Carousel images={img} />
       
       <HStack>
-     {data.map((item)=>
-
-     <Cards key={item.id} 
-      title={item.title}
-      precio={item.precio}
-      img={item.img}
-      descripcion={item.descripcion}
-     />
-     )}
-     
+        {data.map((item)=>
+        <Cards key={item.id} 
+          title={item.title}
+          precio={item.precio}
+          img={item.img}
+          descripcion={item.descripcion}
+          />
+          )}
       </HStack>
     </VStack>
   );

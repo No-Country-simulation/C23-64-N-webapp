@@ -6,14 +6,14 @@ import { Link } from "react-router-dom";
 const Header = () => {
   return (
     <Center bg="brown.100" justifyContent={"space-between"} p={4}>
-      <Box>
+      <Box as={Link} to="/">
         <Img
           src={logo}
           alt="logo"
          w='250px'/>
       </Box>
-      <Link to="/">
-        <Button variant="custom">Home</Button>
+      <Link to="/productos">
+        <Button variant="custom">Productos</Button>
       </Link>
       <Link to="/nosotros">
         <Button variant="custom">Nosotros</Button>
