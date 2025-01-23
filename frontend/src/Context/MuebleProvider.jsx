@@ -8,10 +8,13 @@ export const MuebleProvider = ({ children }) => {
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
   const getFurniture = async () => {
-    await axios.get(`${baseURL}/furniture`).then((response) => {
+    try {
+      const response = await axios.get(`${baseURL}/furniture`);
+      console.log("Datos recibidos de la API:", response.data); // 🔍 Ver la respuesta
       setFurniture(response.data);
-    });
-   
+    } catch (error) {
+      console.error("Error fetching furniture:", error);
+    }
   };
  
   useEffect(() => {

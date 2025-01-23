@@ -14,11 +14,11 @@ function App() {
       <MuebleProvider>
       <Header />
         <Routes>
-          <Route path="/" element={<Home />}></Route>
-          <Route path="/contacto" element={<Contacto />}></Route>
-          <Route path="/productos" element={<Products />}></Route>
-          <Route path="/producto/:id" element={<Product />}></Route>
-          <Route path="/category/:id" element={<Category />}></Route>
+          <Route path="/" element={<Home />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/productos" element={<Products />} />
+          <Route path="/producto/:id" element={<Product />} />
+          <Route path="/category/:id" element={<Category />} />
         </Routes>
       <Footer />
       </MuebleProvider>

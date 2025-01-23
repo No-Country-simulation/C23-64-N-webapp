@@ -2,6 +2,8 @@ import { Box, Button, Center, Container, HStack, Img } from "@chakra-ui/react";
 import logo from "/img/logo.png";
 import React from "react";
 import { Link } from "react-router-dom";
+import MenuItems from "../MenuItems/MenuItems";
+import CartIcon from "../CartIcon/CartIcon";
 
 const Header = () => {
   return (
@@ -11,9 +13,7 @@ const Header = () => {
           <Img src={logo} alt="logo" w="250px" />
         </Box>
       </Link>
-      <Link to="/productos">
-        <Button variant="custom">Productos</Button>
-      </Link>
+        <MenuItems/>
       <Link to="/nosotros">
         <Button variant="custom">Nosotros</Button>
       </Link>
@@ -21,9 +21,7 @@ const Header = () => {
       <Link to="/contacto">
         <Button variant="custom">Contacto</Button>
       </Link>
-      <Link to="/carrito">
-        <Button variant="custom">Carrito</Button>
-      </Link>
+      <CartIcon/>
     </Center>
   );
 };
