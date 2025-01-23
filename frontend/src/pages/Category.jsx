@@ -7,8 +7,7 @@ import ProductCard from "../components/Card/ProductCard";
 export const Category = () => {
   const { id } = useParams(); // La categoría viene de la URL
   const { furniture } = useContext(MuebleContext);
-
-  console.log("URL category param:", id);
+   console.log("URL category param:", id);
   console.log("All furniture:", furniture);
 
   // Asegurar que la categoría filtrada coincide con la URL
@@ -23,12 +22,7 @@ export const Category = () => {
           filteredProducts.map((item) => (
             <ProductCard
               key={item.id}
-              id={item.id}
-              title={item.name}
-              img={item.imageUri}
-              description={item.description}
-              stock={item.stock}
-              price={item.unitPrice}
+              producto={item}
               disponible={true}
               category={item.category}
             />
@@ -36,6 +30,7 @@ export const Category = () => {
         ) : (
           <p>No hay productos en esta categoría.</p>
         )}
+
       </HStack>
     </VStack>
   );
