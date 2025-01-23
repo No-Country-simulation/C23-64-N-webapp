@@ -1,13 +1,12 @@
 import React, { useContext } from "react";
 import { MuebleContext } from "../Context/MuebleContext";
-import { Heading, HStack, VStack } from "@chakra-ui/react";
+import { Heading, HStack, useModal, useModalContext, VStack } from "@chakra-ui/react";
 import Cards from "../components/Card/Cards";
 import ProductCard from "../components/Card/ProductCard";
 
 const Products = () => {
   const { furniture } = useContext(MuebleContext);
  
-
   return (
     <VStack h={"100%"} justifyContent={"center"}>
       
@@ -15,13 +14,10 @@ const Products = () => {
         {furniture.map((item) => (
           <ProductCard
             key={item.id}
-            id={item.id}
-            title={item.name}
-            precio={item.unitPrice}
-            img={item.imageUri}
-            descripcion={item.description}
+            producto={item}
           />
         ))}
+        
       </HStack>
     </VStack>
   );

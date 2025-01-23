@@ -14,21 +14,37 @@ import {
 import React from "react";
 import { Link } from "react-router-dom";
 
-const ProductCard = ({id, img, title, description, disponible }) => {
+import { useModal } from "../../Context/ModalContext";
+import ModalRental from "../Modal/ModalRental";
+
+const ProductCard = ({ disponible=true ,producto}) => {
+ 
+  const { openModal, closeModal } = useModal();
+  
+   const handleOpenModal = (product) => {
+     openModal(product,(selectedProduct)=>{
+       console.log("Producto confirmado",selectedProduct);
+     });
+   };
   return (
+    <>
+      
+  
     <Card
       maxW="sm"
       _hover={{
         boxShadow: "5px 5px 15px 5px #8E6E53",
       }}
     >
-      <CardBody minH={"250px"}>
+      <CardBody minH={"400px"}>
         <Flex>
           <Box
-            w="350px"
+            w="400px"
             minH="50vh"
             bgGradient="linear(to-r, , blue.700)"
-            bgImage={`url(${img})`}
+            bgPosition={'center'}
+            bgSize={'cover'}
+            bgImage={`url(${producto.imageUri})`}
             color="white"
           >
             <Flex
@@ -55,20 +71,26 @@ const ProductCard = ({id, img, title, description, disponible }) => {
         </Flex>
         <Stack mt="6" spacing="3">
           <Heading size="md" textAlign={"center"} color="brown.600">
-            {title}
+            {producto.title}
           </Heading>
         </Stack>
       </CardBody>
       <Divider />
       <CardFooter>
         <ButtonGroup spacing="2">
-          <Button bgColor={"olivaClaro"}>Alquilar</Button>
-          <Link to={`/producto/${id}`}>
+          <Button bgColor={"olivaClaro"}
+          onClick={()=>handleOpenModal(producto)}
+          >Alquilar</Button>
+
+          <Link to={`/producto/${producto.id}`}>
             <Button bgColor={"dorado"}>Detalles</Button>
           </Link>
         </ButtonGroup>
+        
       </CardFooter>
     </Card>
+    
+    </>
   );
 };
 

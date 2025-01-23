@@ -8,9 +8,13 @@ import { Category } from "./pages/Category";
 import Products from "./pages/Products";
 import Product from "./pages/Product";
 
+import { ModalProvider } from "./Context/ModalContext";
+import ModalRental from "./components/Modal/ModalRental";
+
 function App() {
   return (
     <BrowserRouter>
+      <ModalProvider>
       <MuebleProvider>
       <Header />
         <Routes>
@@ -22,6 +26,8 @@ function App() {
         </Routes>
       <Footer />
       </MuebleProvider>
+      <ModalRental />
+      </ModalProvider>
     </BrowserRouter>
   );
 }
