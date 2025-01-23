@@ -28,6 +28,8 @@ const CategoryCard = ({ id, img, title, disponible = true }) => {
               w="350px"
               minH="50vh"
               bgGradient="linear(to-r, , blue.700)"
+              bgPosition={'center'}
+              bgSize={'cover'}
               bgImage={`url(${img})`}
               color="white"
             >
