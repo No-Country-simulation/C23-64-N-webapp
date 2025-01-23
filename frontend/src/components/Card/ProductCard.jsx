@@ -20,7 +20,7 @@ import ModalRental from "../Modal/ModalRental";
 const ProductCard = ({ disponible=true ,producto}) => {
  
   const { openModal, closeModal } = useModal();
-  
+  console.log(producto)
    const handleOpenModal = (product) => {
      openModal(product,(selectedProduct)=>{
        console.log("Producto confirmado",selectedProduct);
@@ -70,9 +70,21 @@ const ProductCard = ({ disponible=true ,producto}) => {
           </Box>
         </Flex>
         <Stack mt="6" spacing="3">
-          <Heading size="md" textAlign={"center"} color="brown.600">
-            {producto.title}
+          <Heading 
+          fontSize={'2xl'} 
+          textAlign={"center"} 
+          textShadow={"3px 3px 3px #8E6E53"}
+          color="brown.500">
+            {producto.name}
           </Heading>
+          <Text textAlign={"center"} color={'brown'}>{producto.description}</Text>
+          <Text 
+          textAlign={"center"}
+          fontSize={'xl'} 
+          color={'tostado'}
+          fontWeight={900}
+          fontFamily={'cursive'}
+          >$ {producto.unitPrice}</Text>
         </Stack>
       </CardBody>
       <Divider />
