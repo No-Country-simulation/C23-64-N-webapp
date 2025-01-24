@@ -20,7 +20,7 @@ import ModalRental from "../Modal/ModalRental";
 const ProductCard = ({ disponible=true ,producto}) => {
  
   const { openModal, closeModal } = useModal();
-  console.log(producto)
+
    const handleOpenModal = (product) => {
      openModal(product,(selectedProduct)=>{
        console.log("Producto confirmado",selectedProduct);
@@ -31,15 +31,17 @@ const ProductCard = ({ disponible=true ,producto}) => {
       
   
     <Card
+    bgColor='brown.100'
       maxW="sm"
       _hover={{
         boxShadow: "5px 5px 15px 5px #8E6E53",
       }}
+      h='700px'
     >
-      <CardBody minH={"400px"}>
+      <CardBody h={'400px'}>
         <Flex>
           <Box
-            w="400px"
+            w="440px"
             minH="50vh"
             bgGradient="linear(to-r, , blue.700)"
             bgPosition={'center'}
@@ -69,16 +71,19 @@ const ProductCard = ({ disponible=true ,producto}) => {
             </Flex>
           </Box>
         </Flex>
-        <Stack mt="6" spacing="3">
+        <Stack mt="6" spacing="1">
           <Heading 
           fontSize={'2xl'} 
           textAlign={"center"} 
           textShadow={"3px 3px 3px #8E6E53"}
-          color="brown.500">
+          color="brown.500"
+          overflow={'hidden'}
+          h='30px'
+          >
             {producto.name}
           </Heading>
-          <Text textAlign={"center"} color={'brown'}>{producto.description}</Text>
-          <Text 
+          <Text overflow={'hidden'} h='50px'textAlign={"center"} color={'brown'}>{producto.description}</Text>
+          <Text h={'50px'}
           textAlign={"center"}
           fontSize={'xl'} 
           color={'tostado'}

@@ -10,11 +10,13 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
+
   useDisclosure,
 } from "@chakra-ui/react";
 
 import { useModal } from "../../Context/ModalContext";
 import { useState } from "react";
+import { SimpleDatePicker } from "simple-chakra-ui-datepicker";
 
 const ModalRental = () => {
   const OverlayOne = () => (
@@ -23,8 +25,14 @@ const ModalRental = () => {
       backdropFilter="blur(10px) hue-rotate(90deg)"
     />
   );
+//PARA EL CALENDARIO
+// const [selectedDate, setSelectedDate] = useState(null);
 
-  const { isOpen, modalContent, closeModal, onConfirm } = useModal();
+const handleDateChange = (date) => {
+  setSelectedDate(date);
+};
+//
+  const { isOpen, modalContent, closeModal, onConfirm,selectedDate,setSelectedDate,getDayFree } = useModal();
   const [overlay, setOverlay] = useState(<OverlayOne />);
   const [input, setInput] = useState({});
 
@@ -32,7 +40,7 @@ const ModalRental = () => {
     if (typeof onConfirm === "function") {
       
       const data = { ...modalContent, ...input };
-      console.log("DAtos agregados", data);
+      getDayFree(selectedDate)
       onConfirm(modalContent); // Solo ejecuta si es una función
     }
     closeModal(); // Cierra el modal
@@ -51,6 +59,14 @@ const ModalRental = () => {
               <Text><strong>Descripción:</strong> {modalContent.description}</Text>
               <Text><strong>Precio:</strong> ${modalContent.unitPrice}</Text>
             </Box>)}
+            <Box mt={4}>
+            <SimpleDatePicker  
+            value={selectedDate}
+          
+          onChange={handleDateChange}
+
+          />
+      </Box>
           <Text>Ingrese la cantidad</Text>
           <Input
             type="number"

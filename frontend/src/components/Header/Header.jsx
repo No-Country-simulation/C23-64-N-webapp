@@ -7,10 +7,10 @@ import CartIcon from "../CartIcon/CartIcon";
 
 const Header = () => {
   return (
-    <Center bg="brown.100" justifyContent={"space-between"} p={4}>
+    <Center bg="brown.100" justifyContent={"space-between"} p={4} h={'100px'}>
       <Link to="/">
         <Box>
-          <Img src={logo} alt="logo" w="250px" />
+          <Img src={logo} alt="logo" w="25%" />
         </Box>
       </Link>
         <MenuItems/>

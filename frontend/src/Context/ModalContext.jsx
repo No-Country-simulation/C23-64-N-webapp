@@ -7,8 +7,14 @@ const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState(null);
-
   const [onConfirm, setOnConfirm] = useState(()=>()=>{});
+//para el calendario
+const [selectedDate, setSelectedDate] = useState(null);
+
+const getDayFree=(dato)=>{
+  console.log(dato);
+}
+//
 
 
   // Función para abrir el modal
@@ -28,7 +34,16 @@ export const ModalProvider = ({ children }) => {
 
   return (
     <ModalContext.Provider
-      value={{ isOpen, openModal, closeModal, modalContent,onConfirm }}
+      value={{ 
+        isOpen, 
+        openModal, 
+        closeModal, 
+        modalContent,
+        onConfirm,
+        setSelectedDate,
+        selectedDate,
+        getDayFree
+         }}
     >
       {children}
       {/* {isOpen && <Modal>{modalContent}</Modal>} */}

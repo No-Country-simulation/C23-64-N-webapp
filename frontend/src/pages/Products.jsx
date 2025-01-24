@@ -8,7 +8,7 @@ const Products = () => {
   const { furniture } = useContext(MuebleContext);
  
   return (
-    <VStack h={"100%"} justifyContent={"center"}>
+    <VStack h={"100%"} justifyContent={"center"} m={5}>
       
       <HStack wrap={"wrap"} justifyContent={"center"} spacing={4}>
         {furniture.map((item) => (
