@@ -10,8 +10,8 @@ public class FurnitureCreateDto {
     @Size(max = 100, message = "El nombre del producto no puede superar los 100 caracteres")
     private String name;
 
-    @NotBlank(message = "La categoría de mobiliario no puede estar vacía")
-    private String category;
+    @NotNull(message = "La categoría de mobiliario no puede ser nula")
+    private Long categoryId;
 
     @NotNull(message = "El total de existencias no puede ser nulo")
     @PositiveOrZero(message = "El total de existencias debe ser mayor o igual a 0")
@@ -36,12 +36,12 @@ public class FurnitureCreateDto {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Integer getStock() {

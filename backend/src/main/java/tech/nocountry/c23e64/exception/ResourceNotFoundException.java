@@ -13,6 +13,7 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message);
         this.problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, message);
         problemDetail.setType(URI.create("https://httpstatuses.com/404"));
+        problemDetail.setTitle("Not Found");
     }
 
     public ProblemDetail getProblemDetail() {

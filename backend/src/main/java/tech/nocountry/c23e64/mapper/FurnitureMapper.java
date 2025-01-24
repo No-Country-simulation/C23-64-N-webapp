@@ -1,21 +1,27 @@
 package tech.nocountry.c23e64.mapper;
 
-import org.springframework.beans.BeanUtils;
+import org.mapstruct.Context;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import tech.nocountry.c23e64.dto.FurnitureCreateDto;
 import tech.nocountry.c23e64.dto.FurnitureDto;
+import tech.nocountry.c23e64.model.CategoryEntity;
 import tech.nocountry.c23e64.model.FurnitureEntity;
+import tech.nocountry.c23e64.repository.CategoryRepository;
 
-public class FurnitureMapper {
+@Mapper(componentModel = "spring")
+public abstract class FurnitureMapper {
 
-    public static FurnitureDto toDto(FurnitureEntity furnitureEntity) {
-        FurnitureDto dto = new FurnitureDto();
-        BeanUtils.copyProperties(furnitureEntity, dto);
-        return dto;
-    }
+    @Mapping(source = "categoryId", target = "category", qualifiedByName = "mapCategory")
+    @Mapping(target = "id", ignore = true)
+    public abstract FurnitureEntity toEntity(FurnitureCreateDto createDto, @Context CategoryRepository categoryRepository);
 
-    public static FurnitureEntity toEntity(FurnitureCreateDto createDto) {
-        FurnitureEntity entity = new FurnitureEntity();
-        BeanUtils.copyProperties(createDto, entity);
-        return entity;
+    @Mapping(source = "category.name", target = "category")
+    public abstract FurnitureDto toDto(FurnitureEntity furnitureEntity);
+
+    @Named("mapCategory")
+    public CategoryEntity mapCategory(Long id, @Context CategoryRepository categoryRepository) {
+        return categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + id + " no existe"));
     }
 }
