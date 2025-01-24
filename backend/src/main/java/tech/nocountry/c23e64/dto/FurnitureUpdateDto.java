@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+import tech.nocountry.c23e64.model.CategoryEntity;
 
 import java.math.BigDecimal;
 
@@ -12,7 +13,7 @@ public class FurnitureUpdateDto {
     @Size(max = 100, message = "El nombre del producto no puede superar los 100 caracteres")
     private String name;
 
-    private String category;
+    private Long categoryId;
 
     @PositiveOrZero(message = "El total de existencias debe ser mayor o igual a 0")
     private Integer stock;
@@ -33,12 +34,12 @@ public class FurnitureUpdateDto {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public Integer getStock() {

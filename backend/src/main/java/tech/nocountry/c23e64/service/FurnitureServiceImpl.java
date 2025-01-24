@@ -7,7 +7,9 @@ import tech.nocountry.c23e64.dto.FurnitureUpdateDto;
 import tech.nocountry.c23e64.exception.DuplicateResourceException;
 import tech.nocountry.c23e64.exception.ResourceNotFoundException;
 import tech.nocountry.c23e64.mapper.FurnitureMapper;
+import tech.nocountry.c23e64.model.CategoryEntity;
 import tech.nocountry.c23e64.model.FurnitureEntity;
+import tech.nocountry.c23e64.repository.CategoryRepository;
 import tech.nocountry.c23e64.repository.FurnitureRepository;
 
 import java.util.List;
@@ -16,9 +18,13 @@ import java.util.List;
 public class FurnitureServiceImpl implements FurnitureService {
 
     private final FurnitureRepository furnitureRepository;
+    private final CategoryRepository categoryRepository;
+    private final FurnitureMapper furnitureMapper;
 
-    public FurnitureServiceImpl(FurnitureRepository furnitureRepository) {
+    public FurnitureServiceImpl(FurnitureRepository furnitureRepository, CategoryRepository categoryRepository, FurnitureMapper furnitureMapper) {
         this.furnitureRepository = furnitureRepository;
+        this.categoryRepository = categoryRepository;
+        this.furnitureMapper = furnitureMapper;
     }
 
     @Override
@@ -26,9 +32,12 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (furnitureRepository.existsByName(createDto.getName())) {
             throw new DuplicateResourceException("El mueble con nombre '" + createDto.getName() + "' ya existe.");
         }
+        if (!categoryRepository.existsById(createDto.getCategoryId())) {
+            throw new IllegalArgumentException("La categoría con ID " + createDto.getCategoryId() + " no existe.");
+        }
 
-        FurnitureEntity furnitureEntity = furnitureRepository.save(FurnitureMapper.toEntity(createDto));
-        return FurnitureMapper.toDto(furnitureEntity);
+        FurnitureEntity furnitureEntity = furnitureRepository.save(furnitureMapper.toEntity(createDto));
+        return furnitureMapper.toDto(furnitureEntity);
     }
 
     @Override
@@ -42,8 +51,9 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (updateDto.getName() != null) {
             furnitureEntity.setName(updateDto.getName());
         }
-        if (updateDto.getCategory() != null) {
-            furnitureEntity.setCategory(updateDto.getCategory());
+        if (updateDto.getCategoryId() != null) {
+            CategoryEntity categoryEntity = categoryRepository.findById(updateDto.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + updateDto.getCategoryId() + " no existe"));
+            furnitureEntity.setCategory(categoryEntity);
         }
         if (updateDto.getStock() != null) {
             furnitureEntity.setStock(updateDto.getStock());
@@ -59,21 +69,21 @@ public class FurnitureServiceImpl implements FurnitureService {
         }
 
         furnitureRepository.save(furnitureEntity);
-        return FurnitureMapper.toDto(furnitureEntity);
+        return furnitureMapper.toDto(furnitureEntity);
     }
 
     @Override
     public FurnitureDto getFurnitureById(Long id) {
         FurnitureEntity furnitureEntity = furnitureRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("El mueble con ID " + id + " no existe"));
 
-        return FurnitureMapper.toDto(furnitureEntity);
+        return furnitureMapper.toDto(furnitureEntity);
     }
 
     @Override
     public List<FurnitureDto> getAllFurniture() {
         return furnitureRepository.findAll()
                 .stream()
-                .map(FurnitureMapper::toDto).toList();
+                .map(furnitureMapper::toDto).toList();
     }
 
     @Override

@@ -1,9 +1,15 @@
 package tech.nocountry.c23e64.service;
 
-import tech.nocountry.c23e64.model.CategoryEntity;
+import jakarta.validation.Valid;
+import tech.nocountry.c23e64.dto.CategoryCreateDto;
+import tech.nocountry.c23e64.dto.CategoryDto;
 
 import java.util.List;
 
 public interface CategoryService {
-    List<CategoryEntity> getAllCategories();
+
+    CategoryDto createCategory(CategoryCreateDto createDto);
+
+    List<CategoryDto> getAllCategories();
+
 }

@@ -1,21 +1,16 @@
 package tech.nocountry.c23e64.mapper;
 
-import org.springframework.beans.BeanUtils;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import tech.nocountry.c23e64.dto.FurnitureCreateDto;
 import tech.nocountry.c23e64.dto.FurnitureDto;
 import tech.nocountry.c23e64.model.FurnitureEntity;
 
-public class FurnitureMapper {
+@Mapper(componentModel = "spring")
+public interface FurnitureMapper {
 
-    public static FurnitureDto toDto(FurnitureEntity furnitureEntity) {
-        FurnitureDto dto = new FurnitureDto();
-        BeanUtils.copyProperties(furnitureEntity, dto);
-        return dto;
-    }
+    FurnitureEntity toEntity(FurnitureCreateDto createDto);
 
-    public static FurnitureEntity toEntity(FurnitureCreateDto createDto) {
-        FurnitureEntity entity = new FurnitureEntity();
-        BeanUtils.copyProperties(createDto, entity);
-        return entity;
-    }
+    @Mapping(source = "category.name", target = "category")
+    FurnitureDto toDto(FurnitureEntity furnitureEntity);
 }

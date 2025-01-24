@@ -1,14 +1,17 @@
 package tech.nocountry.c23e64.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import tech.nocountry.c23e64.model.CategoryEntity;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import tech.nocountry.c23e64.dto.CategoryCreateDto;
+import tech.nocountry.c23e64.dto.CategoryDto;
 import tech.nocountry.c23e64.service.CategoryService;
 
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/categories")
 public class CategoryController {
 
@@ -18,8 +21,13 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    @PostMapping
+    public ResponseEntity<CategoryDto> addCategory(@RequestBody @Valid CategoryCreateDto createDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(createDto));
+    }
+
     @GetMapping
-    public List<CategoryEntity> getAllCategories() {
-        return categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryDto>> getAllCategories() {
+        return ResponseEntity.ok(categoryService.getAllCategories());
     }
 }

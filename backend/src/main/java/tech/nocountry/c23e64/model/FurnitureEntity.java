@@ -19,8 +19,9 @@ public class FurnitureEntity {
     @Column(unique = true)
     private String name;
 
-    @NotNull
-    private String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryEntity category;
 
     @NotNull
     @PositiveOrZero
@@ -52,11 +53,11 @@ public class FurnitureEntity {
         this.name = name;
     }
 
-    public String getCategory() {
+    public CategoryEntity getCategory() {
         return category;
     }
 
-    public void setCategory(String type) {
+    public void setCategory(CategoryEntity type) {
         this.category = type;
     }
 
