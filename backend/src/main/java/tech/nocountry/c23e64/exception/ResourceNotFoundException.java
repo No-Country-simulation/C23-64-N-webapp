@@ -1,10 +1,12 @@
 package tech.nocountry.c23e64.exception;
 
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 
 import java.net.URI;
 
+@Getter
 public class ResourceNotFoundException extends RuntimeException {
 
     private final ProblemDetail problemDetail;
@@ -16,7 +18,4 @@ public class ResourceNotFoundException extends RuntimeException {
         problemDetail.setTitle("Not Found");
     }
 
-    public ProblemDetail getProblemDetail() {
-        return problemDetail;
-    }
 }
