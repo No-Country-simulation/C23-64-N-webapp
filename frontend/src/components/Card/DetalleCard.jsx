@@ -14,7 +14,7 @@ const DetalleCard = ({ name, img, description, price, stock }) => {
   return (
     <Card
       direction={{ base: "column", sm: "row" }}
-      overflow="hidden"
+      // overflow="hidden"
      m={3}
      
       variant="outline"
@@ -22,9 +22,11 @@ const DetalleCard = ({ name, img, description, price, stock }) => {
       <Image
         objectFit="cover"
         m={3}
-        maxW={{ base: "100%", sm: "200px" }}
+        maxW={{ base: "100%", sm: "300px" }}
         src={img}
         alt={name}
+        
+        
       />
 
       <Stack>
@@ -40,7 +42,7 @@ const DetalleCard = ({ name, img, description, price, stock }) => {
         </CardBody>
 
         <CardFooter>
-          <Button variant="solid" colorScheme="blue">
+          <Button >
             Alquilar
           </Button>
         </CardFooter>

@@ -10,23 +10,26 @@ import Product from "./pages/Product";
 
 import { ModalProvider } from "./Context/ModalContext";
 import ModalRental from "./components/Modal/ModalRental";
+import { Box } from "@chakra-ui/react";
 
 function App() {
   return (
     <BrowserRouter>
       <ModalProvider>
-      <MuebleProvider>
-      <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/contacto" element={<Contacto />} />
-          <Route path="/productos" element={<Products />} />
-          <Route path="/producto/:id" element={<Product />} />
-          <Route path="/category/:id" element={<Category />} />
-        </Routes>
-      <Footer />
-      </MuebleProvider>
-      <ModalRental />
+        <MuebleProvider>
+          <Header />
+          <Box minH={"60vh"}>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/contacto" element={<Contacto />} />
+              <Route path="/productos" element={<Products />} />
+              <Route path="/producto/:id" element={<Product />} />
+              <Route path="/category/:id" element={<Category />} />
+            </Routes>
+          </Box>
+          <Footer />
+        </MuebleProvider>
+        <ModalRental />
       </ModalProvider>
     </BrowserRouter>
   );

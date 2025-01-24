@@ -13,7 +13,7 @@ const Product = () => {
   const product = furniture.find((item) => item.id === Number(id));
 
   return (
-    <Center m={5}>
+    <Center m={1} h={'82vh'}>
       <Box  
       borderRadius={15}
       boxShadow={"15px 15px 10px #8E6E53"}

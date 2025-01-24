@@ -16,7 +16,7 @@ export const Category = () => {
   );
 
   return (
-    <VStack h={"100%"} justifyContent={"center"}>
+    <VStack minH={"80vh"} justifyContent={"center"} m={5}>
       <HStack wrap={"wrap"} justifyContent={"center"} spacing={4}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((item) => (

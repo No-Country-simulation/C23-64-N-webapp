@@ -21,7 +21,7 @@ const Home = () => {
 );
 // console.log("productos",typeProducts)
   return (
-    <VStack h={"100%"} justifyContent={"center"}>
+    <VStack h={"100%"} justifyContent={"center"} mb={5}>
       <Carousel images={img} />
       <Heading as="h1" size='2xl'>CATEGORIAS</Heading>
       <HStack wrap={'wrap'} justifyContent={"center"} spacing={4}>
