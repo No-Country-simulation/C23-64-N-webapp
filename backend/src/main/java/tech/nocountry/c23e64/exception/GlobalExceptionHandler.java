@@ -2,6 +2,7 @@ package tech.nocountry.c23e64.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -16,8 +17,8 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ProblemDetail handleResourceNotFound(ResourceNotFoundException e) {
-        return e.getProblemDetail();
+    public ProblemDetail handleResourceNotFound(ResourceNotFoundException ex) {
+        return ex.getProblemDetail();
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
@@ -45,6 +46,16 @@ public class GlobalExceptionHandler {
                 .collect(Collectors.toList());
 
         problemDetail.setProperty("errors", errors);
+        return problemDetail;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ProblemDetail handleInvalidJson(HttpMessageNotReadableException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setType(URI.create("https://httpstatuses.com/400"));
+        problemDetail.setTitle("Invalid JSON");
+        problemDetail.setDetail("The request body contains invalid JSON");
+
         return problemDetail;
     }
 }
