@@ -37,5 +37,12 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryMapper::toDto)
                 .toList();
     }
+
+    @Override
+    public CategoryDto getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .map(categoryMapper::toDto)
+                .orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + id + " no existe."));
+    }
 }
 

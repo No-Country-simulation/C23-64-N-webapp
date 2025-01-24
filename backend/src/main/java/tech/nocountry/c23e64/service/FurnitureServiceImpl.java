@@ -1,5 +1,6 @@
 package tech.nocountry.c23e64.service;
 
+import org.mapstruct.Context;
 import org.springframework.stereotype.Service;
 import tech.nocountry.c23e64.dto.FurnitureCreateDto;
 import tech.nocountry.c23e64.dto.FurnitureDto;
@@ -32,11 +33,9 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (furnitureRepository.existsByName(createDto.getName())) {
             throw new DuplicateResourceException("El mueble con nombre '" + createDto.getName() + "' ya existe.");
         }
-        if (!categoryRepository.existsById(createDto.getCategoryId())) {
-            throw new IllegalArgumentException("La categoría con ID " + createDto.getCategoryId() + " no existe.");
-        }
 
-        FurnitureEntity furnitureEntity = furnitureRepository.save(furnitureMapper.toEntity(createDto));
+        FurnitureEntity furnitureEntity = furnitureMapper.toEntity(createDto, categoryRepository);
+        furnitureRepository.save(furnitureEntity);
         return furnitureMapper.toDto(furnitureEntity);
     }
 
