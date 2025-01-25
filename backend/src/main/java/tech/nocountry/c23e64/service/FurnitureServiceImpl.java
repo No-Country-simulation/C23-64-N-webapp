@@ -32,8 +32,13 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (furnitureRepository.existsByName(createDto.getName())) {
             throw new DuplicateResourceException("El mueble con nombre '" + createDto.getName() + "' ya existe.");
         }
+        CategoryEntity categoryEntity = categoryRepository
+                .findById(createDto.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + createDto.getCategoryId() + " no existe"));
 
-        FurnitureEntity furnitureEntity = furnitureMapper.toEntity(createDto, categoryRepository);
+        FurnitureEntity furnitureEntity = furnitureMapper.toEntity(createDto);
+        furnitureEntity.setCategory(categoryEntity);
+
         furnitureRepository.save(furnitureEntity);
         return furnitureMapper.toDto(furnitureEntity);
     }
@@ -50,7 +55,9 @@ public class FurnitureServiceImpl implements FurnitureService {
             furnitureEntity.setName(updateDto.getName());
         }
         if (updateDto.getCategoryId() != null) {
-            CategoryEntity categoryEntity = categoryRepository.findById(updateDto.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + updateDto.getCategoryId() + " no existe"));
+            CategoryEntity categoryEntity = categoryRepository
+                    .findById(updateDto.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + updateDto.getCategoryId() + " no existe"));
             furnitureEntity.setCategory(categoryEntity);
         }
         if (updateDto.getStock() != null) {
@@ -72,7 +79,9 @@ public class FurnitureServiceImpl implements FurnitureService {
 
     @Override
     public FurnitureDto getFurnitureById(Long id) {
-        FurnitureEntity furnitureEntity = furnitureRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("El mueble con ID " + id + " no existe"));
+        FurnitureEntity furnitureEntity = furnitureRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("El mueble con ID " + id + " no existe"));
 
         return furnitureMapper.toDto(furnitureEntity);
     }
