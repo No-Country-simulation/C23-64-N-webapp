@@ -4,13 +4,11 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Setter
-@Getter
+@Data
 public class FurnitureUpdateDto {
 
     @Size(max = 100, message = "El nombre del producto no puede superar los 100 caracteres")

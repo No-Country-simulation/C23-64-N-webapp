@@ -1,12 +1,10 @@
 package tech.nocountry.c23e64.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Setter
-@Getter
+@Data
 public class FurnitureDto {
     private Long id;
 

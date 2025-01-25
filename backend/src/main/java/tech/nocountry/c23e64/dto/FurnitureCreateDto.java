@@ -1,13 +1,11 @@
 package tech.nocountry.c23e64.dto;
 
 import jakarta.validation.constraints.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.math.BigDecimal;
 
-@Setter
-@Getter
+@Data
 public class FurnitureCreateDto {
 
     @NotBlank(message = "El nombre del producto no puede estar vacío")

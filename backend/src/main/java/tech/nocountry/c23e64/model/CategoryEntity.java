@@ -1,11 +1,9 @@
 package tech.nocountry.c23e64.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 @Entity
 @Table(name = "category")
 public class CategoryEntity {

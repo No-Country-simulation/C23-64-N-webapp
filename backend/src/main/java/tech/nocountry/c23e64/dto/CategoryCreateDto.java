@@ -3,11 +3,9 @@ package tech.nocountry.c23e64.dto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Setter
-@Getter
+@Data
 public class CategoryCreateDto {
 
     @NotBlank(message = "El nombre de categoría no puede estar vacío")
