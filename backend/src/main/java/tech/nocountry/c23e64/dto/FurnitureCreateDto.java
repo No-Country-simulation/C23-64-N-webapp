@@ -12,8 +12,8 @@ public class FurnitureCreateDto {
     @Size(max = 100, message = "El nombre del producto no puede superar los 100 caracteres")
     private String name;
 
-    @NotNull(message = "La categoría de mobiliario no puede ser nula")
-    private Long categoryId;
+    @NotBlank(message = "El nombre de la categoría no puede estar vacío")
+    private String categoryName;
 
     @NotNull(message = "El total de existencias no puede ser nulo")
     @PositiveOrZero(message = "El total de existencias debe ser mayor o igual a 0")
