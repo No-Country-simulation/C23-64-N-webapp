@@ -35,13 +35,13 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setType(URI.create("https://httpstatuses.com/400"));
         problemDetail.setTitle("Validation Error");
-        problemDetail.setDetail("One or more fields contain invalid values");
+        problemDetail.setDetail("Uno o más campos contienen valores inválidos");
 
         List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> Map.of(
                         "field", err.getField(),
                         "rejectedValue", String.valueOf(err.getRejectedValue()),
-                        "message", Objects.requireNonNullElse(err.getDefaultMessage(), "Validation error")
+                        "message", Objects.requireNonNullElse(err.getDefaultMessage(), "Error de validación")
                 ))
                 .collect(Collectors.toList());
 
@@ -54,7 +54,7 @@ public class GlobalExceptionHandler {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setType(URI.create("https://httpstatuses.com/400"));
         problemDetail.setTitle("Invalid JSON");
-        problemDetail.setDetail("The request body contains invalid JSON");
+        problemDetail.setDetail("El cuerpo de la petición contiene JSON inválido");
 
         return problemDetail;
     }
