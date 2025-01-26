@@ -3,7 +3,9 @@ import { MuebleContext } from "./MuebleContext";
 import axios from "axios";
 
 export const MuebleProvider = ({ children }) => {
+ 
   const [furniture, setFurniture] = useState([]);
+  const [category,setCategory]=useState([]);
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
@@ -12,17 +14,33 @@ export const MuebleProvider = ({ children }) => {
       const response = await axios.get(`${baseURL}/furniture`);
       console.log("Datos recibidos de la API:", response.data); // 🔍 Ver la respuesta
       setFurniture(response.data);
+      
+      
     } catch (error) {
       console.error("Error fetching furniture:", error);
     }
   };
+  const getCategory = async () => {
+    try {
+      const response = await axios.get(`${baseURL}/categories`);
+      setCategory(response.data);
+
+    } catch (error) {
+      console.error("Error fetching category:", error);
+      }
+  };
  
   useEffect(() => {
     getFurniture();
+    getCategory();
   }, []);
 
   return (
-    <MuebleContext.Provider value={{ furniture,getFurniture }}>
+    <MuebleContext.Provider value={{
+      furniture,
+      category,
+      getFurniture,
+      getCategory }}>
       {children}
     </MuebleContext.Provider>
   );

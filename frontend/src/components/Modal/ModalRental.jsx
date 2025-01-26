@@ -32,20 +32,29 @@ const handleDateChange = (date) => {
   setSelectedDate(date);
 };
 //
-  const { isOpen, modalContent, closeModal, onConfirm,selectedDate,setSelectedDate,getDayFree } = useModal();
+  const { isOpen, modalContent, closeModal, onConfirm,
+    selectedDate,setSelectedDate,getDayFree,reserveOk
+   } = useModal();
   const [overlay, setOverlay] = useState(<OverlayOne />);
-  const [input, setInput] = useState({});
+  const [input, setInput] = useState("");
 
   const handleConfirm = () => {
     if (typeof onConfirm === "function") {
-      
-      const data = { ...modalContent, ...input };
-      getDayFree(selectedDate)
-      onConfirm(modalContent); // Solo ejecuta si es una función
+      const data = { ...modalContent, ...input ,selectedDate};
+      getDayFree(data)
+      onConfirm(data); // Solo ejecuta si es una función
     }
     closeModal(); // Cierra el modal
   };
 
+  const handleVerificar = () => {
+    if (typeof onConfirm === "function") {
+      const data = { ...modalContent, ...input ,selectedDate};
+      getDayFree(data)
+      onConfirm(data); // Solo ejecuta si es una función
+    }
+    
+  };
   return (
     <Modal isCentered isOpen={isOpen} onClose={closeModal}>
       {overlay}
@@ -73,10 +82,20 @@ const handleDateChange = (date) => {
             value={input.cantidad}
             onChange={(e) => setInput({ ...input, cantidad: e.target.value })}
           />
+          {reserveOk && <Text>Cantidad disponible</Text>}
         </ModalBody>
-        <ModalFooter>
-        <Button onClick={() => handleConfirm()}>Confirm</Button>
-          <Button onClick={() => closeModal()}>Close</Button>
+        <ModalFooter >
+        <Button onClick={() => handleVerificar()} 
+        mx={'1'} 
+        fontSize={'sm'}
+        bgColor={'cyan.400'}
+        >Verificar</Button>
+        {reserveOk&& <Button onClick={() => handleConfirm()} 
+        mx={'1'}
+        fontSize={'sm'}
+        bgColor={'green.400'}
+        >Confirmar</Button>}
+          <Button onClick={() => closeModal()}mx={'1'}fontSize={'sm'} bgColor={'red.400'}>Cerrar</Button>
         </ModalFooter>
       </ModalContent>
     </Modal>

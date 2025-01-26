@@ -12,8 +12,9 @@ export const Category = () => {
 
   // Asegurar que la categoría filtrada coincide con la URL
   const filteredProducts = furniture.filter(
-    (item) => item.category.replace(/\s+/g, "-").toLowerCase() === id
+    (item) => item.category=== id
   );
+ console.log("Filtered products:", filteredProducts);
 
   return (
     <VStack minH={"80vh"} justifyContent={"center"} m={5}>
