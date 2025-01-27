@@ -6,6 +6,7 @@ export const MuebleProvider = ({ children }) => {
  
   const [furniture, setFurniture] = useState([]);
   const [category,setCategory]=useState([]);
+  const [rol,setRol]=useState({rol:'user'})
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
@@ -40,7 +41,9 @@ export const MuebleProvider = ({ children }) => {
       furniture,
       category,
       getFurniture,
-      getCategory }}>
+      getCategory,
+      rol
+      }}>
       {children}
     </MuebleContext.Provider>
   );
