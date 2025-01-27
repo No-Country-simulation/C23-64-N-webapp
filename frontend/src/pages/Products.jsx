@@ -6,7 +6,7 @@ import ProductCard from "../components/Card/ProductCard";
 
 const Products = () => {
   const { furniture } = useContext(MuebleContext);
- 
+ console.log(furniture)
   return (
     <VStack h={"100%"} justifyContent={"center"} m={5}>
       
