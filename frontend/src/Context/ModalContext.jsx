@@ -10,12 +10,30 @@ export const ModalProvider = ({ children }) => {
   const [modalContent, setModalContent] = useState(null);
   const [onConfirm, setOnConfirm] = useState(()=>()=>{});
   const [reserveOk, setReserveOk] = useState(false);
+  
+  const initialValueRental = {
+    cliente:{
+      nombre: '',
+      apellido: '',
+      dni: '',
+      telefono: '',
+      email: '',
+      direccion: '',
+    },
+    muebles:[],
+    fechaAlquiler:'',
+    total:'',
+    registrarCliente:''
+  }
+  const [cartCount, setCartCount] = useState(0);
+  const [rental,setRental]=useState(initialValueRental)
+
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
 //para el calendario
 const [selectedDate, setSelectedDate] = useState(null);
 
-const getDayFree=async (dato)=>{
+const getDayFree= (dato)=>{
   // const params={
   //   "date":dato.selectedDate,
   //   "id":dato.id,
@@ -30,18 +48,22 @@ const getDayFree=async (dato)=>{
   //   console.error("Error fetching category:", error);
   //   }
   console.log("Info para el endpoint",dato);
-  (dato.cantidad<=dato.stock)? setReserveOk(true):setReserveOk(false);
-  
+ 
+   (dato.dato.stock>9)? setReserveOk(true):setReserveOk(false);
+  return 9;
 
 }
 //
-
+const agregarMueble=()=>{
+  console.log("Llamando desde afuera")
+}
 
   // Función para abrir el modal
   const openModal = (content, confirmCallback) => {
-    console.log("recibido para el modal",content)
+    // console.log("recibido para el modal",content)
     setModalContent(content);
-    setOnConfirm(() => (typeof confirmCallback === "function" ? confirmCallback : () => {})); // Validar si es función
+ 
+    setOnConfirm(() => (typeof confirmCallback === "function" ? confirmCallback : () => {}));
     setIsOpen(true);
   };
 
@@ -64,7 +86,11 @@ const getDayFree=async (dato)=>{
         setSelectedDate,
         selectedDate,
         getDayFree,
-        reserveOk
+        reserveOk,
+        setRental,
+        rental,
+        cartCount, 
+        setCartCount
          }}
     >
       {children}

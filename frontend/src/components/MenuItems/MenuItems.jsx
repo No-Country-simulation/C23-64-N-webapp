@@ -17,11 +17,10 @@ const MenuItems = () => {
     }
   }, [furniture]);
 
-  console.log("React Router navigate:", navigate);
-
+  
   const handleCategorySelect = (category) => {
     const formattedCategory = category.replace(/\s+/g, "-").toLowerCase(); // Normaliza la URL
-    console.log("Navigating to:", `/category/${formattedCategory}`);
+    
     navigate(`/category/${formattedCategory}`);
     setIsOpen(false);
   };

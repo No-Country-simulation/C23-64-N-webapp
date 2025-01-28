@@ -19,12 +19,13 @@ import ModalRental from "../Modal/ModalRental";
 
 const ProductCard = ({ disponible=true ,producto}) => {
  
-  const { openModal, closeModal } = useModal();
+  const { openModal, closeModal,onConfirm } = useModal();
 
    const handleOpenModal = (product) => {
      openModal(product,(selectedProduct)=>{
        console.log("Producto confirmado",selectedProduct);
-     });
+      });
+      console.log(onConfirm) 
    };
   return (
     <>
@@ -97,7 +98,7 @@ const ProductCard = ({ disponible=true ,producto}) => {
         <ButtonGroup spacing="2">
           <Button bgColor={"olivaClaro"}
           onClick={()=>handleOpenModal(producto)}
-          >Alquilar</Button>
+          >Consulta</Button>
 
           <Link to={`/producto/${producto.id}`}>
             <Button bgColor={"dorado"}>Detalles</Button>
