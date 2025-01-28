@@ -11,23 +11,35 @@ import {
   Tr,
   Th,
   Td,
-  useColorModeValue,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { SettingsIcon } from "@chakra-ui/icons";
 import { MuebleContext } from "../Context/MuebleContext";
+import ModalProducts from "../components/Modal/ModalProducts";
+import ModalReservations from "../components/Modal/ModalReservations"; // Importamos el modal de reservas
 
 const AdminPanel = () => {
   const [activeSection, setActiveSection] = useState("productos");
-  const { furniture } = useContext(MuebleContext); 
+  const { furniture } = useContext(MuebleContext);
 
-  // Simulación de reservas (hasta que se conecte el backend)
-  const reservas = [
-    { id: 1, cliente: "Juan Pérez", fecha: "2025-01-20", total: "$150.00" },
-    { id: 2, cliente: "Ana Gómez", fecha: "2025-01-22", total: "$200.00" },
-  ];
+  // Control de los modales
+  const { isOpen: isProductOpen, onOpen: onProductOpen, onClose: onProductClose } = useDisclosure();
+  const { isOpen: isReservationOpen, onOpen: onReservationOpen, onClose: onReservationClose } = useDisclosure();
+
+  // Simulación de agregar producto (luego se conectará al backend)
+  const addProduct = (product) => {
+    console.log("Producto agregado:", product);
+  };
+
+  // Simulación de agregar reserva (luego se conectará al backend)
+  const addReservation = (reservation) => {
+    console.log("Reserva agregada:", reservation);
+  };
 
   return (
     <Flex>
-      <Box w="250px" p={5} bg={useColorModeValue("gray.800", "gray.700")} color="white">
+      {/* MENÚ LATERAL */}
+      <Box w="250px" p={5} bg="gray.800" color="white">
         <Heading size="md" mb={5}>Panel de Administración</Heading>
         <VStack align="start" spacing={4}>
           <Button variant="link" colorScheme="teal" onClick={() => setActiveSection("productos")}>
@@ -39,13 +51,24 @@ const AdminPanel = () => {
         </VStack>
       </Box>
 
+      {/* CONTENIDO PRINCIPAL */}
       <Box flex="1" h="100vh" p={6}>
-        <Heading size="lg" mb={4}>
+        <Heading size="lg" mb={4} display="flex" justifyContent="space-between" alignItems="center">
           {activeSection === "productos" ? "Lista de Productos" : "Reservas"}
+
+          {activeSection === "productos" ? (
+            <Button colorScheme="teal" size="sm" onClick={onProductOpen}>
+              Agregar Producto
+            </Button>
+          ) : (
+            <Button colorScheme="teal" size="sm" onClick={onReservationOpen}>
+              Agregar Reserva
+            </Button>
+          )}
         </Heading>
 
         {activeSection === "productos" ? (
-          // Tabla de Productos
+          // TABLA DE PRODUCTOS
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -67,7 +90,7 @@ const AdminPanel = () => {
                   <Td>{item.description}</Td>
                   <Td>
                     <Button colorScheme="blue" size="sm">
-                      Modificar
+                      <SettingsIcon />
                     </Button>
                   </Td>
                 </Tr>
@@ -75,7 +98,7 @@ const AdminPanel = () => {
             </Tbody>
           </Table>
         ) : (
-          // Tabla de Reservas
+          // TABLA DE RESERVAS
           <Table variant="simple">
             <Thead>
               <Tr>
@@ -86,7 +109,10 @@ const AdminPanel = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {reservas.map((reserva) => (
+              {[
+                { id: 1, cliente: "Juan Pérez", fecha: "2025-01-20", total: "$150.00" },
+                { id: 2, cliente: "Ana Gómez", fecha: "2025-01-22", total: "$200.00" }
+              ].map((reserva) => (
                 <Tr key={reserva.id}>
                   <Td>{reserva.id}</Td>
                   <Td>{reserva.cliente}</Td>
@@ -98,6 +124,12 @@ const AdminPanel = () => {
           </Table>
         )}
       </Box>
+
+      {/* MODAL PARA AGREGAR PRODUCTO */}
+      <ModalProducts isOpen={isProductOpen} onClose={onProductClose} addProduct={addProduct} />
+
+      {/* MODAL PARA AGREGAR RESERVA */}
+      <ModalReservations isOpen={isReservationOpen} onClose={onReservationClose} addReservation={addReservation} products={furniture} />
     </Flex>
   );
 };
