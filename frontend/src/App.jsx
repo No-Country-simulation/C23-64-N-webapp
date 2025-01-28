@@ -12,6 +12,7 @@ import { ModalProvider } from "./Context/ModalContext";
 import ModalRental from "./components/Modal/ModalRental";
 import { Box } from "@chakra-ui/react";
 import AdminLogin from "./pages/AdminLogin";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
   return (
@@ -19,16 +20,17 @@ function App() {
       <ModalProvider>
         <MuebleProvider>
           <Header />
-          <Box minH={"60vh"}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/contacto" element={<Contacto />} />
-              <Route path="/productos" element={<Products />} />
-              <Route path="/producto/:id" element={<Product />} />
-              <Route path="/category/:id" element={<Category />} />
-              <Route path="/adminlogin" element={<AdminLogin />} />
-            </Routes>
-          </Box>
+            <Box minH={"60vh"}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/contacto" element={<Contacto />} />
+                <Route path="/productos" element={<Products />} />
+                <Route path="/producto/:id" element={<Product />} />
+                <Route path="/category/:id" element={<Category />} />
+                <Route path="/adminlogin" element={<AdminLogin />} />
+                <Route path="/adminpanel" element={<AdminPanel/>} />
+              </Routes>
+            </Box>
           <Footer />
         </MuebleProvider>
         <ModalRental />

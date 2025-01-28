@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <>    
-    {rol.rol === "admin" && (
+    {rol.rol !== "admin" && (
       <Center bg="brown.100" justifyContent={"space-between"} p={4} h={"100px"}>
 
 <Link to="/">
