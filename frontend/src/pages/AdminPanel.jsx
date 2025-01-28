@@ -16,24 +16,40 @@ import {
 import { SettingsIcon } from "@chakra-ui/icons";
 import { MuebleContext } from "../Context/MuebleContext";
 import ModalProducts from "../components/Modal/ModalProducts";
-import ModalReservations from "../components/Modal/ModalReservations"; // Importamos el modal de reservas
+import ModalReservations from "../components/Modal/ModalReservations";
+import ModalEditProduct from "../components/Modal/ModalEditProduct"; // Nuevo modal para editar productos
 
 const AdminPanel = () => {
   const [activeSection, setActiveSection] = useState("productos");
-  const { furniture } = useContext(MuebleContext);
+  const { furniture, setFurniture } = useContext(MuebleContext);
 
-  // Control de los modales
+  // Estados para modales
   const { isOpen: isProductOpen, onOpen: onProductOpen, onClose: onProductClose } = useDisclosure();
   const { isOpen: isReservationOpen, onOpen: onReservationOpen, onClose: onReservationClose } = useDisclosure();
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
+
+  // Estado para almacenar el producto a editar
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Simulación de agregar producto (luego se conectará al backend)
   const addProduct = (product) => {
-    console.log("Producto agregado:", product);
+    setFurniture([...furniture, { ...product, id: furniture.length + 1 }]);
   };
 
   // Simulación de agregar reserva (luego se conectará al backend)
   const addReservation = (reservation) => {
     console.log("Reserva agregada:", reservation);
+  };
+
+  // Función para editar un producto
+  const handleEditClick = (product) => {
+    setSelectedProduct(product);
+    onEditOpen();
+  };
+
+  // Función para actualizar un producto en la lista
+  const updateProduct = (updatedProduct) => {
+    setFurniture(furniture.map((item) => (item.id === updatedProduct.id ? updatedProduct : item)));
   };
 
   return (
@@ -89,7 +105,7 @@ const AdminPanel = () => {
                   <Td>${item.unitPrice}</Td>
                   <Td>{item.description}</Td>
                   <Td>
-                    <Button colorScheme="blue" size="sm">
+                    <Button colorScheme="blue" size="sm" onClick={() => handleEditClick(item)}>
                       <SettingsIcon />
                     </Button>
                   </Td>
@@ -130,6 +146,9 @@ const AdminPanel = () => {
 
       {/* MODAL PARA AGREGAR RESERVA */}
       <ModalReservations isOpen={isReservationOpen} onClose={onReservationClose} addReservation={addReservation} products={furniture} />
+
+      {/* MODAL PARA EDITAR PRODUCTO */}
+      <ModalEditProduct isOpen={isEditOpen} onClose={onEditClose} product={selectedProduct} updateProduct={updateProduct} />
     </Flex>
   );
 };
