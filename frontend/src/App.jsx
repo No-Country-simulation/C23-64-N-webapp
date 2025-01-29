@@ -17,8 +17,8 @@ import DetailCart from "./pages/DetailCart";
 function App() {
   return (
     <BrowserRouter>
-      <ModalProvider>
-        <MuebleProvider>
+      <MuebleProvider>
+        <ModalProvider>
           <Header />
           <Box minH={"60vh"}>
             <Routes>
@@ -32,9 +32,9 @@ function App() {
             </Routes>
           </Box>
           <Footer />
-        </MuebleProvider>
-        <ModalRental />
-      </ModalProvider>
+          <ModalRental />
+        </ModalProvider>
+      </MuebleProvider>
     </BrowserRouter>
   );
 }

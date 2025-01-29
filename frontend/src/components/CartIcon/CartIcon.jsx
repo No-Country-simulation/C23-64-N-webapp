@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { IconButton, Badge, Box } from "@chakra-ui/react";
 import { FaShoppingCart } from "react-icons/fa";
-import { useModal } from "../../Context/ModalContext";
+import { MuebleContext } from "../../Context/MuebleContext";
 
 
 const CartIcon = () => {
-    const {cartCount}=useModal();
+    const {cartCount}=useContext(MuebleContext);
 
     return (
         <Box position="relative">

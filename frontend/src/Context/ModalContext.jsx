@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useContext, useEffect } from "react";
 
 // Crear el contexto del modal
 const ModalContext = createContext();
@@ -7,10 +7,11 @@ const ModalContext = createContext();
 // Proveedor del contexto del modal
 export const ModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [modalContent, setModalContent] = useState(null);
+  const [modalContent, setModalContent] = useState({});
   const [onConfirm, setOnConfirm] = useState(()=>()=>{});
   const [reserveOk, setReserveOk] = useState(false);
-  
+  const [cantidad, setCantidad] = useState(0);
+
   const initialValueRental = {
     cliente:{
       nombre: '',
@@ -25,7 +26,7 @@ export const ModalProvider = ({ children }) => {
     total:'',
     registrarCliente:''
   }
-  const [cartCount, setCartCount] = useState(0);
+  
   const [rental,setRental]=useState(initialValueRental)
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
@@ -49,32 +50,34 @@ const getDayFree= (dato)=>{
   //   }
   console.log("Info para el endpoint",dato);
  
-   (dato.dato.stock>9)? setReserveOk(true):setReserveOk(false);
-  return 9;
+   (dato)? setReserveOk(true):setReserveOk(false);
+   setCantidad(9)
+  
 
 }
-//
-const agregarMueble=()=>{
-  console.log("Llamando desde afuera")
-}
+
 
   // Función para abrir el modal
-  const openModal = (content, confirmCallback) => {
-    // console.log("recibido para el modal",content)
+
+  // const openModal = (content, confirmCallback) => {
+  const openModal = (content) => {
+    
     setModalContent(content);
- 
-    setOnConfirm(() => (typeof confirmCallback === "function" ? confirmCallback : () => {}));
+    // setOnConfirm(() => (typeof confirmCallback === "function" ? confirmCallback : () => {}));
     setIsOpen(true);
   };
 
   // Función para cerrar el modal
   const closeModal = () => {
-    
+    onConfirm(rental)
     setIsOpen(false);
     setModalContent(null);
     setOnConfirm(() => () => {}); 
   };
-
+  useEffect(()=>{
+    localStorage.setItem('rental',JSON.stringify(rental))
+    // console.log(rental)
+  },[rental])
   return (
     <ModalContext.Provider
       value={{ 
@@ -89,8 +92,9 @@ const agregarMueble=()=>{
         reserveOk,
         setRental,
         rental,
-        cartCount, 
-        setCartCount
+        
+        setCantidad,
+        cantidad,
          }}
     >
       {children}

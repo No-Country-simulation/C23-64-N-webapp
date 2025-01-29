@@ -14,8 +14,9 @@ import {
 } from "@chakra-ui/react";
 
 import { useModal } from "../../Context/ModalContext";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SimpleDatePicker } from "simple-chakra-ui-datepicker";
+import { MuebleContext } from "../../Context/MuebleContext";
 
 
 const ModalRental = () => {
@@ -27,8 +28,8 @@ const ModalRental = () => {
   );
   const [overlay, setOverlay] = useState(<OverlayOne />);
   const [input, setInput] = useState("");
-  const [cantidad, setCantidad] = useState(0);
   
+  const {cartCount, setCartCount}= useContext(MuebleContext)
 
   //PARA EL CALENDARIO
   // const [selectedDate, setSelectedDate] = useState(null);
@@ -40,7 +41,7 @@ const ModalRental = () => {
       fecha: selectedDate,
       dato: modalContent,
     };
-    setCantidad(getDayFree(dato));
+    getDayFree(date);
   };
   //
   const {
@@ -54,9 +55,10 @@ const ModalRental = () => {
     reserveOk,
     setRental,
     rental,
-    setCartCount,
-    cartCount
+    cantidad, 
+    // setCantidad
   } = useModal();
+  
 
   const handleConfirm = () => {
     if (typeof onConfirm === "function") {
@@ -83,17 +85,15 @@ const ModalRental = () => {
       console.log("confirmado rental", rental);
       //onConfirm(data); // Solo ejecuta si es una función
     }
+ 
+
     closeModal(); // Cierra el modal
 
   };
 
-  const handleVerificar = () => {
-    if (typeof onConfirm === "function") {
-      const data = { ...modalContent, ...input, selectedDate };
-      getDayFree(data);
-      //onConfirm(data); // Solo ejecuta si es una función
-    }
-  };
+
+
+  
   return (
     <Modal isCentered isOpen={isOpen} onClose={closeModal}>
       {overlay}

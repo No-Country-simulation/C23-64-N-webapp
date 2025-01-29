@@ -19,13 +19,23 @@ import ModalRental from "../Modal/ModalRental";
 
 const ProductCard = ({ disponible=true ,producto}) => {
  
-  const { openModal, closeModal,onConfirm } = useModal();
+  const { openModal, closeModal,onConfirm,getDayFree } = useModal();
+
+  const productConfirm=(data)=>{
+    localStorage.setItem('alquiler', JSON.stringify(data))
+  }
+
 
    const handleOpenModal = (product) => {
-     openModal(product,(selectedProduct)=>{
-       console.log("Producto confirmado",selectedProduct);
-      });
-      console.log(onConfirm) 
+    const fecha = localStorage.getItem('fecha');
+    // console.log(fecha)
+    if(fecha!==null){
+      //llamar al endpoint con fecha para obtener la cantidad
+      getDayFree(fecha)
+    }else{
+      //  openModal(product,productConfirm)
+    }
+    openModal(product);
    };
   return (
     <>
