@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { createContext, useState, useContext, useEffect } from "react";
+import { formatDateToString } from "../assets/utilities";
 
 // Crear el contexto del modal
 const ModalContext = createContext();
@@ -34,32 +35,33 @@ export const ModalProvider = ({ children }) => {
 //para el calendario
 const [selectedDate, setSelectedDate] = useState(null);
 
-const getDayFree= (fecha='',libre=0)=>{
-  // const params={
-  //   "date":dato.selectedDate,
-  //   "id":dato.id,
-  //   "cantidad":dato.cantidad
-  //   }
-  
-  // try {
-  //   const response = await axios.get(`${baseURL}/reserve/`,{params});
+const getDayFree= async(fecha='',libre=0,id=null)=>{
+  const params={
+    "id":id?id:null,
+    "date":(fecha!='')? formatDateToString(fecha):null,
     
-
-  // } catch (error) {
-  //   console.error("Error fetching category:", error);
-  //   }
-  if(fecha!=''){
-    console.log("Info para el endpoint",fecha);
-    if(libre>0){
-      setReserveOk(true)
-      setCantidad(libre)
-    }else{
-      setReserveOk(false);
     }
-  }else{
-    setReserveOk(false);
-    setCantidad(0)
-  }
+  
+  try {
+    const response = await axios.get(`${baseURL}/furniture/`,{params});
+    console.log(response.data)
+
+  } catch (error) {
+    console.error("Error fetching category:", error);
+    }
+  //mientras no esta el endpoint
+  // if(fecha!=''){
+  //   console.log("Info para el endpoint",fecha);
+  //   if(libre>0){
+  //     setReserveOk(true)
+  //     setCantidad(libre)
+  //   }else{
+  //     setReserveOk(false);
+  //   }
+  // }else{
+  //   setReserveOk(false);
+  //   setCantidad(0)
+  // }
    
   
 

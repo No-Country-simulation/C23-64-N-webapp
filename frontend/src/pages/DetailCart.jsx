@@ -29,6 +29,7 @@ import { MuebleContext } from "../Context/MuebleContext";
 import { useModal } from "../Context/ModalContext";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { AlertDialogComponent } from "../components/AlertDialog/AlertDialog";
+import { formatDateToString } from "../assets/utilities";
 
 const DetailCart = () => {
   const { rental, setRental } = useModal();
@@ -37,13 +38,6 @@ const DetailCart = () => {
   const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
   const [alertMessage, setAlertMessage] = useState(""); // Estado para el mensaje de la alerta
   const muebles = rental.muebles;
-
-  const formatDateToString = (date) => {
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${year}-${month}-${day}`;
-  };
 
   const eliminarProducto = (id) => {
     const pro = muebles.find((item) => item.id === id);
