@@ -15,6 +15,7 @@ import tech.nocountry.c23e64.model.CategoryEntity;
 import tech.nocountry.c23e64.model.FurnitureEntity;
 import tech.nocountry.c23e64.repository.CategoryRepository;
 import tech.nocountry.c23e64.repository.FurnitureRepository;
+import tech.nocountry.c23e64.repository.RentalDetailRepository;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -36,6 +37,9 @@ public class FurnitureServiceImplTest {
     private CategoryRepository categoryRepository;
 
     @Mock
+    private RentalDetailRepository rentalDetailRepository;
+
+    @Mock
     private FurnitureMapper furnitureMapper;
 
     private AutoCloseable closeable;
@@ -43,7 +47,7 @@ public class FurnitureServiceImplTest {
     @BeforeEach
     public void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
-        furnitureService = new FurnitureServiceImpl(furnitureRepository, categoryRepository, furnitureMapper);
+        furnitureService = new FurnitureServiceImpl(furnitureRepository, categoryRepository, rentalDetailRepository, furnitureMapper);
     }
 
     @AfterEach
@@ -218,7 +222,7 @@ public class FurnitureServiceImplTest {
         when(furnitureMapper.toDto(any(FurnitureEntity.class))).thenReturn(furnitureDto);
 
         // Act
-        List<FurnitureDto> result = furnitureService.getAllFurniture();
+        List<FurnitureDto> result = furnitureService.getAllFurniture(null);
 
         // Assert
         assertNotNull(result);
@@ -241,7 +245,7 @@ public class FurnitureServiceImplTest {
         when(furnitureMapper.toDto(any(FurnitureEntity.class))).thenReturn(furnitureDto);
 
         // Act
-        FurnitureDto result = furnitureService.getFurnitureById(1L);
+        FurnitureDto result = furnitureService.getFurnitureById(1L, null);
 
         // Assert
         assertNotNull(result);
@@ -254,7 +258,7 @@ public class FurnitureServiceImplTest {
         when(furnitureRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         // Act & Assert
-        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> furnitureService.getFurnitureById(1L));
+        ResourceNotFoundException exception = assertThrows(ResourceNotFoundException.class, () -> furnitureService.getFurnitureById(1L, null));
 
         assertEquals("El mueble con ID 1 no existe", exception.getMessage());
     }

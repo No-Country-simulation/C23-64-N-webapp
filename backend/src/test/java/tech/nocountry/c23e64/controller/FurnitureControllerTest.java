@@ -17,8 +17,7 @@ import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -209,7 +208,7 @@ public class FurnitureControllerTest {
         responseDto.setDescription("Silla de madera color café");
         responseDto.setImageUri("https://www.example.com/silla.jpg");
 
-        when(furnitureService.getAllFurniture()).thenReturn(List.of(responseDto));
+        when(furnitureService.getAllFurniture(isNull())).thenReturn(List.of(responseDto));
         mockMvc.perform(get("/furniture")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -228,7 +227,7 @@ public class FurnitureControllerTest {
     @Test
     @DisplayName("Get all furniture when database is empty")
     public void getAllFurniture_EmptyDatabase_ShouldReturnEmptyList() throws Exception {
-        when(furnitureService.getAllFurniture()).thenReturn(Collections.emptyList());
+        when(furnitureService.getAllFurniture(isNull())).thenReturn(Collections.emptyList());
         mockMvc.perform(get("/furniture")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -247,7 +246,7 @@ public class FurnitureControllerTest {
         responseDto.setDescription("Silla de madera color café");
         responseDto.setImageUri("https://www.example.com/silla.jpg");
 
-        when(furnitureService.getFurnitureById(anyLong())).thenReturn(responseDto);
+        when(furnitureService.getFurnitureById(anyLong(), isNull())).thenReturn(responseDto);
         mockMvc.perform(get("/furniture/1")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -266,7 +265,7 @@ public class FurnitureControllerTest {
     @Test
     @DisplayName("Get furniture by non-existent ID")
     public void getFurnitureById_NonExistentId_ShouldReturnNotFound() throws Exception {
-        when(furnitureService.getFurnitureById(anyLong())).thenThrow(new ResourceNotFoundException("Furniture not found"));
+        when(furnitureService.getFurnitureById(anyLong(), isNull())).thenThrow(new ResourceNotFoundException("Furniture not found"));
 
         mockMvc.perform(get("/furniture/999")
                         .contentType(MediaType.APPLICATION_JSON))
