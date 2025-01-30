@@ -4,16 +4,17 @@ import axios from "axios";
 
 export const MuebleProvider = ({ children }) => {
   const [furniture, setFurniture] = useState([]);
+
   const [category, setCategory] = useState([]);
   const [rol, setRol] = useState({ rol: "user" });
   const [cartCount, setCartCount] = useState(0);
+
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
   const getFurniture = async () => {
     try {
       const response = await axios.get(`${baseURL}/furniture`);
-      // console.log("Datos recibidos de la API:", response.data);
       setFurniture(response.data);
     } catch (error) {
       console.error("Error fetching furniture:", error);
