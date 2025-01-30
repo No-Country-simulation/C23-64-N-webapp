@@ -7,14 +7,14 @@ import ProductCard from "../components/Card/ProductCard";
 export const Category = () => {
   const { id } = useParams(); // La categoría viene de la URL
   const { furniture } = useContext(MuebleContext);
-   console.log("URL category param:", id);
-  console.log("All furniture:", furniture);
+  //  console.log("URL category param:", id);
+  // console.log("All furniture:", furniture);
 
   // Asegurar que la categoría filtrada coincide con la URL
   const filteredProducts = furniture.filter(
     (item) => item.category=== id
   );
- console.log("Filtered products:", filteredProducts);
+//  console.log("Filtered products:", filteredProducts);
 
   return (
     <VStack minH={"80vh"} justifyContent={"center"} m={5}>
