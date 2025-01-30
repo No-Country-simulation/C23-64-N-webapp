@@ -34,7 +34,7 @@ export const ModalProvider = ({ children }) => {
 //para el calendario
 const [selectedDate, setSelectedDate] = useState(null);
 
-const getDayFree= (dato)=>{
+const getDayFree= (fecha='',libre=0)=>{
   // const params={
   //   "date":dato.selectedDate,
   //   "id":dato.id,
@@ -48,10 +48,19 @@ const getDayFree= (dato)=>{
   // } catch (error) {
   //   console.error("Error fetching category:", error);
   //   }
-  console.log("Info para el endpoint",dato);
- 
-   (dato)? setReserveOk(true):setReserveOk(false);
-   setCantidad(9)
+  if(fecha!=''){
+    console.log("Info para el endpoint",fecha);
+    if(libre>0){
+      setReserveOk(true)
+      setCantidad(libre)
+    }else{
+      setReserveOk(false);
+    }
+  }else{
+    setReserveOk(false);
+    setCantidad(0)
+  }
+   
   
 
 }

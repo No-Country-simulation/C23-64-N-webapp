@@ -4,7 +4,6 @@ import {
   Flex,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
   Stack,
@@ -14,7 +13,7 @@ import {
   HStack,
   Checkbox,
 } from "@chakra-ui/react";
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Table,
   Thead,
@@ -29,19 +28,21 @@ import {
 import { MuebleContext } from "../Context/MuebleContext";
 import { useModal } from "../Context/ModalContext";
 import { DeleteIcon } from "@chakra-ui/icons";
+import { AlertDialogComponent } from "../components/AlertDialog/AlertDialog";
 
 const DetailCart = () => {
   const { rental, setRental } = useModal();
-  const { setCartCount, cartCount } = useContext(MuebleContext);
+  const { setCartCount, cartCount,postAlquiler } = useContext(MuebleContext);
   const [total, setTotal] = useState(0);
+  const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
+  const [alertMessage, setAlertMessage] = useState(""); // Estado para el mensaje de la alerta
   const muebles = rental.muebles;
-  // muebles.map((item) => (total = total + item.cantidad * item.precio));
 
   const formatDateToString = (date) => {
     const day = date.getDate().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
     const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
   };
 
   const eliminarProducto = (id) => {
@@ -50,36 +51,51 @@ const DetailCart = () => {
     const extracto = muebles.filter((item) => item.id !== id);
     setRental({ ...rental, muebles: extracto });
   };
-  //formulario
+
   const {
     handleSubmit,
     register,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      firstName: "Omar Dario",
+      lastName: "Virili",
+      dni: "35256328",
+      // phone: "3698521475",
+      email: "pedro@algo.com.ar",
+      address: "Algun lado",
+      // registro: false,
+    },
+  });
 
-  const limpiarAlquiler=()=>{
-    reset()
-  }
+  const limpiarAlquiler = () => {
+    setRental({});
+    localStorage.removeItem("rental");
+    localStorage.removeItem("fecha");
+    reset();
+    window.location.href = "/";
+  };
 
   function onSubmit(values) {
+    const rentalDetails = muebles.map((item)=>({furnitureId:item.id, quantity:item.cantidad}))
     const alquiler = {
-      cliente: { ...values },
-      muebles: { ...muebles },
-      fechaAlquiler: rental.fechaAlquiler,
-      total: total,
-      // registrarCliente: registro,
+      clientInfo: { ...values },
+      rentalDetails: rentalDetails,
+      rentalDate: formatDateToString(rental.fechaAlquiler),
+     
     };
-    // mandar la información al endpoint correspondiente
+    
 
-    console.log(alquiler);
-    limpiarAlquiler()
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        alert(JSON.stringify(alquiler, null, 2));
-        resolve();
-      }, 3000);
-    });
+
+    postAlquiler(alquiler);
+    // Mostrar la alerta
+    setAlertMessage(JSON.stringify(alquiler, null, 2));
+    setShowAlert(true);
+
+    setTimeout(() => {
+      limpiarAlquiler();
+    }, 5000);
   }
 
   useEffect(() => {
@@ -88,10 +104,18 @@ const DetailCart = () => {
     }, 0);
 
     setTotal(nuevoTotal);
-  }, [muebles]); // Se actualiza cada vez que muebles cambie
+  }, [muebles]);
+
   return (
     <Center>
-      {muebles != 0 ? (
+      {showAlert && ( // Renderizar la alerta si showAlert es true
+        <AlertDialogComponent 
+            msj={alertMessage} 
+            isOpen={showAlert} 
+            onClose={() => setShowAlert(false)} 
+        />
+      )}
+      {muebles.length !== 0 ? (
         <Stack>
           <TableContainer>
             <Table variant="striped" colorScheme="brown">
@@ -131,7 +155,6 @@ const DetailCart = () => {
                   <Th colSpan={4} fontSize={"2xl"}>
                     TOTAL PARA ABONAR:{" "}
                   </Th>
-
                   <Th isNumeric fontSize={"2xl"}>
                     $ {total}
                   </Th>
@@ -139,17 +162,16 @@ const DetailCart = () => {
               </Tfoot>
             </Table>
           </TableContainer>
-          {/* formulario de cliente| */}
           <Flex my={5}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <HStack spacing={5} my={"15px"}>
-                <FormControl isInvalid={errors.name}>
-                  <FormLabel htmlFor="name">Nombre</FormLabel>
+                <FormControl isInvalid={errors.firstName}>
+                  <FormLabel htmlFor="firstName">Nombre</FormLabel>
                   <Input
-                    id="name"
+                    id="firstName"
                     placeholder="Nombre"
-                    {...register("name", {
-                      required: "This is required",
+                    {...register("firstName", {
+                      required: "Este campo es requerido",
                       minLength: {
                         value: 4,
                         message: "Mínimo debe tener 4 caracteres",
@@ -157,7 +179,7 @@ const DetailCart = () => {
                     })}
                   />
                   <FormErrorMessage>
-                    {errors.name && errors.name.message}
+                    {errors.firstName && errors.firstName.message}
                   </FormErrorMessage>
                 </FormControl>
 
@@ -167,7 +189,7 @@ const DetailCart = () => {
                     id="lastName"
                     placeholder="Apellido"
                     {...register("lastName", {
-                      required: "This is required",
+                      required: "Este campo es requerido",
                       minLength: {
                         value: 4,
                         message: "Mínimo debe tener 4 caracteres",
@@ -186,8 +208,7 @@ const DetailCart = () => {
                     id="dni"
                     placeholder="Numero de Documento"
                     {...register("dni", {
-                      required: "This is required",
-
+                      required: "Este campo es requerido",
                       minLength: {
                         value: 8,
                         message: "Debe tener 8 digitos",
@@ -200,7 +221,7 @@ const DetailCart = () => {
                 </FormControl>
               </HStack>
               <HStack spacing={5} my={"15px"}>
-                <FormControl isInvalid={errors.telefono}>
+                {/* <FormControl isInvalid={errors.telefono}>
                   <FormLabel htmlFor="tel">Teléfono</FormLabel>
                   <Input
                     type={"tel"}
@@ -216,7 +237,7 @@ const DetailCart = () => {
                   <FormErrorMessage>
                     {errors.tel && errors.tel.message}
                   </FormErrorMessage>
-                </FormControl>
+                </FormControl> */}
 
                 <FormControl isInvalid={errors.email}>
                   <FormLabel htmlFor="email">E-mail</FormLabel>
@@ -236,13 +257,13 @@ const DetailCart = () => {
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={errors.direccion}>
-                  <FormLabel htmlFor="direccion">Direccion</FormLabel>
+                <FormControl isInvalid={errors.address}>
+                  <FormLabel htmlFor="address">Dirección</FormLabel>
                   <Input
                     type="text"
-                    id="direccion"
+                    id="address"
                     placeholder="Dirección de postal"
-                    {...register("direccion", {
+                    {...register("address", {
                       minLength: {
                         value: 7,
                         message: "Mínimo 7 caracteres",
@@ -250,31 +271,25 @@ const DetailCart = () => {
                     })}
                   />
                   <FormErrorMessage>
-                    {errors.direccion && errors.direccion.message}
+                    {errors.address && errors.address.message}
                   </FormErrorMessage>
                 </FormControl>
 
-                <FormControl isInvalid={errors.registro}>
+                {/* <FormControl isInvalid={errors.registro} >
                   <FormLabel htmlFor="registro">
                     Registrarse como cliente
                   </FormLabel>
-                  <Checkbox
+                  <Checkbox disabled
                     id="registro"
                     placeholder="Dirección de postal"
-                    {...register("registro", {
-                      minLength: {
-                        value: 7,
-                        message: "Mínimo 7 caracteres",
-                      },
-                    })}
+                    {...register("registro")}
                   ></Checkbox>
 
                   <FormErrorMessage>
                     {errors.registro && errors.registro.message}
                   </FormErrorMessage>
-                </FormControl>
+                </FormControl> */}
               </HStack>
-              {/* ----------------- */}
 
               <Button
                 mt={4}

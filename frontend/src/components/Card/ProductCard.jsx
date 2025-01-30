@@ -27,14 +27,17 @@ const ProductCard = ({ disponible=true ,producto}) => {
 
 
    const handleOpenModal = (product) => {
+
     const fecha = localStorage.getItem('fecha');
-    // console.log(fecha)
+    console.log(fecha)
     if(fecha!==null){
       //llamar al endpoint con fecha para obtener la cantidad
-      getDayFree(fecha)
+      getDayFree(fecha,4)
     }else{
       //  openModal(product,productConfirm)
+      getDayFree();
     }
+
     openModal(product);
    };
   return (
