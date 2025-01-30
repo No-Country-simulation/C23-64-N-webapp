@@ -11,7 +11,9 @@ import tech.nocountry.c23e64.model.CategoryEntity;
 import tech.nocountry.c23e64.model.FurnitureEntity;
 import tech.nocountry.c23e64.repository.CategoryRepository;
 import tech.nocountry.c23e64.repository.FurnitureRepository;
+import tech.nocountry.c23e64.repository.RentalDetailRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -19,11 +21,13 @@ public class FurnitureServiceImpl implements FurnitureService {
 
     private final FurnitureRepository furnitureRepository;
     private final CategoryRepository categoryRepository;
+    private final RentalDetailRepository rentalDetailRepository;
     private final FurnitureMapper furnitureMapper;
 
-    public FurnitureServiceImpl(FurnitureRepository furnitureRepository, CategoryRepository categoryRepository, FurnitureMapper furnitureMapper) {
+    public FurnitureServiceImpl(FurnitureRepository furnitureRepository, CategoryRepository categoryRepository, RentalDetailRepository rentalDetailRepository, FurnitureMapper furnitureMapper) {
         this.furnitureRepository = furnitureRepository;
         this.categoryRepository = categoryRepository;
+        this.rentalDetailRepository = rentalDetailRepository;
         this.furnitureMapper = furnitureMapper;
     }
 
@@ -80,19 +84,39 @@ public class FurnitureServiceImpl implements FurnitureService {
     }
 
     @Override
-    public FurnitureDto getFurnitureById(Long id) {
+    public FurnitureDto getFurnitureById(Long id, LocalDate date) {
         FurnitureEntity furnitureEntity = furnitureRepository
                 .findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("El mueble con ID " + id + " no existe"));
 
-        return furnitureMapper.toDto(furnitureEntity);
+        FurnitureDto furnitureDto = furnitureMapper.toDto(furnitureEntity);
+
+        if (date != null) {
+            int reservedQuantity = rentalDetailRepository.findTotalReservedByFurnitureAndDate(furnitureEntity.getId(), date);
+            int availableStock = Math.max(furnitureEntity.getStock() - reservedQuantity, 0);
+            furnitureDto.setStock(availableStock);
+        }
+
+        return furnitureDto;
     }
 
     @Override
-    public List<FurnitureDto> getAllFurniture() {
-        return furnitureRepository.findAll()
-                .stream()
-                .map(furnitureMapper::toDto).toList();
+    public List<FurnitureDto> getAllFurniture(LocalDate date) {
+        if (date == null) {
+            return furnitureRepository.findAll()
+                    .stream()
+                    .map(furnitureMapper::toDto).toList();
+        }
+
+        return furnitureRepository.findAll().stream()
+                .map(furniture -> {
+                    int reservedQuantity = rentalDetailRepository.findTotalReservedByFurnitureAndDate(furniture.getId(), date);
+                    int availableStock = Math.max(furniture.getStock() - reservedQuantity, 0);
+                    FurnitureDto furnitureDto = furnitureMapper.toDto(furniture);
+                    furnitureDto.setStock(availableStock);
+                    return furnitureDto;
+                })
+                .toList();
     }
 
     @Override
