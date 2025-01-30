@@ -14,6 +14,8 @@ public class RentalDto {
 
     private List<RentalDetailDto> rentalDetails;
 
+    private String rentalDate;
+
     private BigDecimal total;
 
     private String qrCode;

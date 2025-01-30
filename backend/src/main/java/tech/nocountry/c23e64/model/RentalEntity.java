@@ -27,6 +27,7 @@ public class RentalEntity {
     @JoinColumn(name = "client_info_id", nullable = false)
     private ClientInfoEntity clientInfo;
 
+    @Builder.Default
     @OneToMany(mappedBy = "rental", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<RentalDetailEntity> rentalDetails = new ArrayList<>();
 
