@@ -39,7 +39,6 @@ public class RentalServiceImpl implements RentalService {
 
         RentalEntity rental = RentalEntity.builder()
                 .clientInfo(clientInfo)
-                .total(BigDecimal.ZERO) // Se calculará después
                 .rentalDate(createDto.getRentalDate())
                 .qrCode("QR CODE")
                 .build();
