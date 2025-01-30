@@ -17,6 +17,7 @@ import tech.nocountry.c23e64.model.RentalDetailEntity;
 import tech.nocountry.c23e64.model.RentalEntity;
 import tech.nocountry.c23e64.repository.ClientInfoRepository;
 import tech.nocountry.c23e64.repository.FurnitureRepository;
+import tech.nocountry.c23e64.repository.RentalDetailRepository;
 import tech.nocountry.c23e64.repository.RentalRepository;
 
 import java.awt.image.BufferedImage;
@@ -32,11 +33,13 @@ public class RentalServiceImpl implements RentalService {
     private final ClientInfoRepository clientInfoRepository;
     private final RentalMapper rentalMapper;
     private final ClientInfoMapper clientInfoMapper;
+    private final RentalDetailRepository rentalDetailRepository;
 
-    public RentalServiceImpl(RentalRepository rentalRepository, ClientInfoRepository clientInfoRepository, FurnitureRepository furnitureRepository, RentalMapper rentalMapper, ClientInfoMapper clientInfoMapper) {
+    public RentalServiceImpl(RentalRepository rentalRepository, FurnitureRepository furnitureRepository, ClientInfoRepository clientInfoRepository, RentalDetailRepository rentalDetailRepository, RentalMapper rentalMapper, ClientInfoMapper clientInfoMapper) {
         this.rentalRepository = rentalRepository;
-        this.clientInfoRepository = clientInfoRepository;
         this.furnitureRepository = furnitureRepository;
+        this.clientInfoRepository = clientInfoRepository;
+        this.rentalDetailRepository = rentalDetailRepository;
         this.rentalMapper = rentalMapper;
         this.clientInfoMapper = clientInfoMapper;
     }
@@ -53,6 +56,11 @@ public class RentalServiceImpl implements RentalService {
         List<RentalDetailEntity> rentalDetails = createDto.getRentalDetails().stream().map(rentalDetailCreateDto -> {
             FurnitureEntity furniture = furnitureRepository.findById(rentalDetailCreateDto.getFurnitureId())
                     .orElseThrow(() -> new IllegalArgumentException("El mueble con ID " + rentalDetailCreateDto.getFurnitureId() + " no existe"));
+
+            Integer totalReserved = rentalDetailRepository.findTotalReservedByFurnitureAndDate(furniture.getId(), rental.getRentalDate());
+            if (totalReserved + rentalDetailCreateDto.getQuantity() > furniture.getStock()) {
+                throw new IllegalArgumentException("No hay suficiente stock para el mueble con ID " + furniture.getId());
+            }
 
             return RentalDetailEntity.builder()
                     .rental(rental)
