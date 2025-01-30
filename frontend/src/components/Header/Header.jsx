@@ -16,11 +16,11 @@ const Header = () => {
           bg="brown.100"
           justifyContent={"space-between"}
           p={4}
-          h={"100px"}
+          h={"150px"}
         >
           <Link to="/">
             <Box>
-              <Img src={logo} alt="logo" w="25%" />
+              <Img src={logo} alt="logo" w="50%" />
             </Box>
           </Link>
           <MenuItems />
