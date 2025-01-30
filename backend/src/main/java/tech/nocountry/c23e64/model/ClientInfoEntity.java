@@ -27,4 +27,8 @@ public class ClientInfoEntity {
     @OneToMany(mappedBy = "clientInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RentalEntity> rentals;
 
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
+
 }
