@@ -32,10 +32,10 @@ const ProductCard = ({ disponible=true ,producto}) => {
     console.log(fecha)
     if(fecha!==null){
       //llamar al endpoint con fecha para obtener la cantidad
-      getDayFree(fecha,4)
+      getDayFree(product.id,fecha)
     }else{
       //  openModal(product,productConfirm)
-      getDayFree();
+      getDayFree(product.id);
     }
 
     openModal(product);

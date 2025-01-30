@@ -41,7 +41,7 @@ const ModalRental = () => {
       fecha: selectedDate,
       dato: modalContent,
     };
-    getDayFree(date,3);
+    getDayFree(modalContent.id, date);
   };
   //
   const {
