@@ -28,6 +28,28 @@ export const MuebleProvider = ({ children }) => {
       console.error("Error fetching category:", error);
     }
   };
+   //actualizar furniture
+   const updateFurniture = async (furniture) => {
+    try {
+      console.log(furniture)
+      const response = await axios.patch(`${baseURL}/furniture`,furniture);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error Post furniture:", error);
+    }
+  };
+  //agregar furniture
+  const postFurniture = async (furniture) => {
+    try {
+      console.log(furniture)
+      const response = await axios.post(`${baseURL}/furniture`,furniture);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Error Post furniture:", error);
+    }
+  };
   //registrar alquiler
   const postAlquiler = async (alquiler) => {
     try {
@@ -61,6 +83,8 @@ export const MuebleProvider = ({ children }) => {
         cartCount,
         setCartCount,
         postAlquiler,
+        postFurniture,
+        updateFurniture
       }}
     >
       {children}
