@@ -35,6 +35,4 @@ public class RentalEntity {
 
     private BigDecimal total;
 
-    private String qrCode;
-
 }

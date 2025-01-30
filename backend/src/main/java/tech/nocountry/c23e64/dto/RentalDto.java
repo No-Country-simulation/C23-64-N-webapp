@@ -18,6 +18,4 @@ public class RentalDto {
 
     private BigDecimal total;
 
-    private String qrCode;
-
 }
