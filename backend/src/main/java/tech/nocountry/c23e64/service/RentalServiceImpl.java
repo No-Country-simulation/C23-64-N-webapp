@@ -47,12 +47,12 @@ public class RentalServiceImpl implements RentalService {
             FurnitureEntity furniture = furnitureRepository.findById(rentalDetailCreateDto.getFurnitureId())
                     .orElseThrow(() -> new IllegalArgumentException("El mueble con ID " + rentalDetailCreateDto.getFurnitureId() + " no existe"));
 
-            RentalDetailEntity rentalDetail = new RentalDetailEntity();
-            rentalDetail.setFurniture(furniture);
-            rentalDetail.setQuantity(rentalDetailCreateDto.getQuantity());
-            rentalDetail.setSubTotal(furniture.getUnitPrice().multiply(BigDecimal.valueOf(rentalDetailCreateDto.getQuantity())));
-
-            return rentalDetail;
+            return RentalDetailEntity.builder()
+                    .rental(rental)
+                    .furniture(furniture)
+                    .quantity(rentalDetailCreateDto.getQuantity())
+                    .subTotal(furniture.getUnitPrice().multiply(BigDecimal.valueOf(rentalDetailCreateDto.getQuantity())))
+                    .build();
         }).toList();
 
         rental.setRentalDetails(rentalDetails);

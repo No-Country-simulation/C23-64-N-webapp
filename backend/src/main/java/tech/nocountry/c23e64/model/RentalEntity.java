@@ -28,7 +28,7 @@ public class RentalEntity {
     private ClientInfoEntity clientInfo;
 
     @Builder.Default
-    @OneToMany(mappedBy = "rental", cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RentalDetailEntity> rentalDetails = new ArrayList<>();
 
     private LocalDate rentalDate;
@@ -37,8 +37,4 @@ public class RentalEntity {
 
     private String qrCode;
 
-    public void setRentalDetails(List<RentalDetailEntity> rentalDetails) {
-        this.rentalDetails = rentalDetails;
-        this.rentalDetails.forEach(rentalDetail -> rentalDetail.setRental(this));
-    }
 }
