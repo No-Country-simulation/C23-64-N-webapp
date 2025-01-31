@@ -7,7 +7,6 @@ import { MuebleProvider } from "./Context/MuebleProvider";
 import { Category } from "./pages/Category";
 import Products from "./pages/Products";
 import Product from "./pages/Product";
-
 import { ModalProvider } from "./Context/ModalContext";
 import ModalRental from "./components/Modal/ModalRental";
 import { Box } from "@chakra-ui/react";
@@ -30,7 +29,6 @@ function App() {
                 <Route path="/productos" element={<Products />} />
                 <Route path="/producto/:id" element={<Product />} />
                 <Route path="/carrito" element={<DetailCart/>} />
-                
                 <Route path="/category/:id" element={<Category />} />
                 <Route path="/adminlogin" element={<AdminLogin />} />
                 <Route path="/adminpanel" element={<AdminPanel/>} />

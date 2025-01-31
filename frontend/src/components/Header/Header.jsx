@@ -27,8 +27,6 @@ const Header = () => {
           <Link to="/nosotros">
             <Button variant="custom">Nosotros</Button>
           </Link>
-
-
           <Link to="/contacto">
             <Button variant="custom">Contacto</Button>
           </Link>

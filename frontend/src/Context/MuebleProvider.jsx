@@ -6,9 +6,8 @@ export const MuebleProvider = ({ children }) => {
   const [furniture, setFurniture] = useState([]);
   const [reservado,setReservado]=useState(0)
   const [category, setCategory] = useState([]);
-  const [rol, setRol] = useState({ rol: "user" });
+  const [rol, setRol] = useState({ rol: "admin" });
   const [cartCount, setCartCount] = useState(0);
- 
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 

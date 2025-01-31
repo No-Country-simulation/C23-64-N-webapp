@@ -68,7 +68,7 @@ const AdminPanel = () => {
       </Box>
 
       {/* CONTENIDO PRINCIPAL */}
-      <Box flex="1" h="100vh" p={6}>
+      <Box flex="1" h="100%" p={6}>
         <Heading size="lg" mb={4} display="flex" justifyContent="space-between" alignItems="center">
           {activeSection === "productos" ? "Lista de Productos" : "Reservas"}
 

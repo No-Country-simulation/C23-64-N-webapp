@@ -1,12 +1,15 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
-
+import React, {useContext} from "react";
+import { MuebleContext } from "../../Context/MuebleContext";
 
 export const Footer = () => {
+  const { rol } = useContext(MuebleContext);
+
   return (
-    <Box>
-      
-      <Flex
-      
+    <>
+      {rol.rol !== "admin" &&(
+        <Box>
+        <Flex
         as="footer"
         minH={"50px"}
         direction={"column"}
@@ -16,9 +19,11 @@ export const Footer = () => {
         bg={"gray.800"}
         boxSizing={"border-box"}
         color={"white"}
-      >
-        <Text>© 2025 - Todos los derechos reservados</Text>
-      </Flex>
-    </Box>
+        >
+          <Text>© 2025 - Todos los derechos reservados</Text>
+        </Flex>
+      </Box>
+        )}
+    </>
   );
 };
