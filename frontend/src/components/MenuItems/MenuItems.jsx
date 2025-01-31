@@ -1,27 +1,15 @@
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { MuebleContext } from "../../Context/MuebleContext";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuButton, MenuList, MenuItem, Button } from "@chakra-ui/react";
 
 const MenuItems = () => {
-  const { furniture } = useContext(MuebleContext);
+  const { category } = useContext(MuebleContext);
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
 
-  // Obtener categorías únicas
-  useEffect(() => {
-    if (furniture.length > 0) {
-      const uniqueCategories = [...new Set(furniture.map((item) => item.category))];
-      setCategories(uniqueCategories);
-    }
-  }, [furniture]);
-
-  
   const handleCategorySelect = (category) => {
-    const formattedCategory = category.replace(/\s+/g, "-").toLowerCase(); // Normaliza la URL
-    
-    navigate(`/category/${formattedCategory}`);
+    navigate(`/category/${category.name}`);
     setIsOpen(false);
   };
 
@@ -31,10 +19,10 @@ const MenuItems = () => {
         Productos
       </MenuButton>
       <MenuList>
-        {categories.length > 0 ? (
-          categories.map((category, index) => (
+        {category.length > 0 ? (
+          category.map((category, index) => (
             <MenuItem key={index} onClick={() => handleCategorySelect(category)}>
-              {category}
+              {category.description}
             </MenuItem>
           ))
         ) : (
@@ -42,7 +30,7 @@ const MenuItems = () => {
         )}
         <MenuItem
           onClick={() => navigate("/productos")}
-        >Ver todos los productos
+        >Todos los productos
         </MenuItem>
       </MenuList>
     </Menu>
