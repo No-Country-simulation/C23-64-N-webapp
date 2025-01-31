@@ -35,41 +35,15 @@ export const ModalProvider = ({ children }) => {
   //para el calendario
   const [selectedDate, setSelectedDate] = useState(null);
 
-  const getDayFree = async (id, fecha = '') => {
-
-    // let id=id?id:null;
-    // let fecha= (fecha!='')? formatDateToString(fecha):null;
-
+  const getDayFree = async (id, fecha) => {
     try {
-      if (fecha != '') {
+        let response = await axios.get(`${baseURL}/furniture/${id}?date=${formatDateToString(new Date(fecha))}`);
+         setCantidad(response.data.stock)
       
-        let response = await axios.get(`${baseURL}/furniture/${id}?date=${formatDateToString(fecha)}`);
-        console.log("respuesta con fecha:", response.data)
-        setCantidad(response.data.stock)
-        setReserveOk(true)
-      } else {
-        let response = await axios.get(`${baseURL}/furniture/${id}`);
-        console.log("respuesta sin fecha:", response.data)
-        setCantidad(response.data.stock)
-      }
-
     } catch (error) {
-      console.error("Error fetching category:", error);
+      console.error("Error posible falla de fecha:", error);
     }
-    //mientras no esta el endpoint
-    // if(fecha!=''){
-    //   console.log("Info para el endpoint",fecha);
-    //   if(libre>0){
-    //     setReserveOk(true)
-    //     setCantidad(libre)
-    //   }else{
-    //     setReserveOk(false);
-    //   }
-    // }else{
-    //   setReserveOk(false);
-    //   setCantidad(0)
-    // }
-
+  
 
 
   }
@@ -89,12 +63,13 @@ export const ModalProvider = ({ children }) => {
   const closeModal = () => {
     onConfirm(rental)
     setIsOpen(false);
+    setCantidad(0);
     setModalContent(null);
     setOnConfirm(() => () => { });
   };
   useEffect(() => {
     localStorage.setItem('rental', JSON.stringify(rental))
-    // console.log(rental)
+ 
   }, [rental])
   return (
     <ModalContext.Provider

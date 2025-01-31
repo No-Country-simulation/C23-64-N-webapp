@@ -4,11 +4,11 @@ import axios from "axios";
 
 export const MuebleProvider = ({ children }) => {
   const [furniture, setFurniture] = useState([]);
-
+  const [reservado,setReservado]=useState(0)
   const [category, setCategory] = useState([]);
   const [rol, setRol] = useState({ rol: "user" });
   const [cartCount, setCartCount] = useState(0);
-
+ 
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
@@ -31,10 +31,7 @@ export const MuebleProvider = ({ children }) => {
    //actualizar furniture
    const updateFurniture = async (furniture) => {
     try {
-      console.log(furniture)
-      const response = await axios.patch(`${baseURL}/furniture`,furniture);
-
-      console.log(response.data);
+      await axios.patch(`${baseURL}/furniture`,furniture);
     } catch (error) {
       console.error("Error Post furniture:", error);
     }
@@ -42,25 +39,24 @@ export const MuebleProvider = ({ children }) => {
   //agregar furniture
   const postFurniture = async (furniture) => {
     try {
-      console.log(furniture)
-      const response = await axios.post(`${baseURL}/furniture`,furniture);
-
-      console.log(response.data);
+      await axios.post(`${baseURL}/furniture`,furniture);
     } catch (error) {
       console.error("Error Post furniture:", error);
     }
   };
   //registrar alquiler
-  const postAlquiler = async (alquiler) => {
+  const postAlquiler = async(alquiler) => {
     try {
-      console.log(alquiler)
-      const response = await axios.post(`${baseURL}/rentals`,alquiler);
-
-      console.log(response.data);
+      await axios.post(`${baseURL}/rentals`,alquiler)
+      .then((response) => {
+        localStorage.setItem("id",response.data.id)
+       
+      })
     } catch (error) {
       console.error("Error fetching category:", error);
     }
   };
+ 
 
   useEffect(() => {
     getFurniture();
@@ -84,7 +80,10 @@ export const MuebleProvider = ({ children }) => {
         setCartCount,
         postAlquiler,
         postFurniture,
-        updateFurniture
+        updateFurniture,
+        reservado,
+        setReservado,
+       
       }}
     >
       {children}

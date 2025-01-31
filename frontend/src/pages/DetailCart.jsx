@@ -12,6 +12,7 @@ import {
   Button,
   HStack,
   Checkbox,
+  Box,
 } from "@chakra-ui/react";
 import { useContext, useEffect, useState } from "react";
 import {
@@ -30,14 +31,17 @@ import { useModal } from "../Context/ModalContext";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { AlertDialogComponent } from "../components/AlertDialog/AlertDialog";
 import { formatDateToString } from "../assets/utilities";
+import { useNavigate } from "react-router-dom";
 
 const DetailCart = () => {
   const { rental, setRental } = useModal();
-  const { setCartCount, cartCount,postAlquiler } = useContext(MuebleContext);
+  const { setCartCount, cartCount, postAlquiler, reservado, setReservado } =
+    useContext(MuebleContext);
   const [total, setTotal] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
   const [alertMessage, setAlertMessage] = useState(""); // Estado para el mensaje de la alerta
   const muebles = rental.muebles;
+  const navigate = useNavigate();
 
   const eliminarProducto = (id) => {
     const pro = muebles.find((item) => item.id === id);
@@ -67,29 +71,32 @@ const DetailCart = () => {
     setRental({});
     localStorage.removeItem("rental");
     localStorage.removeItem("fecha");
+    localStorage.removeItem("id");
     reset();
-    window.location.href = "/";
+    navigate('/')
   };
 
   function onSubmit(values) {
-    const rentalDetails = muebles.map((item)=>({furnitureId:item.id, quantity:item.cantidad}))
+    const rentalDetails = muebles.map((item) => ({
+      furnitureId: item.id,
+      quantity: item.cantidad,
+    }));
     const alquiler = {
       clientInfo: { ...values },
       rentalDetails: rentalDetails,
       rentalDate: formatDateToString(rental.fechaAlquiler),
-     
     };
-    
-
 
     postAlquiler(alquiler);
     // Mostrar la alerta
+    setReservado(localStorage.getItem("id"));
+  
     setAlertMessage(JSON.stringify(alquiler, null, 2));
     setShowAlert(true);
 
     setTimeout(() => {
       limpiarAlquiler();
-    }, 5000);
+    }, 15000);
   }
 
   useEffect(() => {
@@ -101,15 +108,15 @@ const DetailCart = () => {
   }, [muebles]);
 
   return (
-    <Center>
+    <Center flexDir={"column"}>
       {showAlert && ( // Renderizar la alerta si showAlert es true
-        <AlertDialogComponent 
-            msj={alertMessage} 
-            isOpen={showAlert} 
-            onClose={() => setShowAlert(false)} 
+        <AlertDialogComponent
+          msj={alertMessage}
+          isOpen={showAlert}
+          onClose={() => setShowAlert(false)}
         />
       )}
-      {muebles.length !== 0 ? (
+      {muebles?.length !== 0 ? (
         <Stack>
           <TableContainer>
             <Table variant="striped" colorScheme="brown">
@@ -301,6 +308,23 @@ const DetailCart = () => {
           <Text fontSize={"2xl"}>No hay muebles cargados para mostrar</Text>
         </VStack>
       )}
+      <Center>
+        {reservado && (
+          <VStack mx={'25px'} >
+            <Text fontSize={'3xl'} textAlign={'center'} color={'olivaClaro'}>
+              Tu reserva ha sido confirmada, se ha enviado un correo electrónico
+              con los datos correspondientes. El día del alquiler, presentate
+              con este código QR:
+            </Text>
+
+            <img
+              src={`https://c23-64-n-webapp-development.up.railway.app/rentals/${reservado}/qrcode`}
+            />
+            <Text fontSize={'2xl'} color={'green.400'}> Este código también fue enviado a tu casilla
+            de correo</Text>
+          </VStack>
+        )}
+      </Center>
     </Center>
   );
 };
