@@ -17,7 +17,7 @@ import { useModal } from "../../Context/ModalContext";
 import { useContext, useEffect, useState } from "react";
 import { SimpleDatePicker } from "simple-chakra-ui-datepicker";
 import { MuebleContext } from "../../Context/MuebleContext";
-
+import { colgroup } from "framer-motion/client";
 
 const ModalRental = () => {
   const OverlayOne = () => (
@@ -28,22 +28,8 @@ const ModalRental = () => {
   );
   const [overlay, setOverlay] = useState(<OverlayOne />);
   const [input, setInput] = useState("");
-  
-  const {cartCount, setCartCount}= useContext(MuebleContext)
 
-  //PARA EL CALENDARIO
-  // const [selectedDate, setSelectedDate] = useState(null);
-
-  const handleDateChange = (date) => {
-    setSelectedDate(date);
-    const dato = {
-      id: modalContent.id,
-      fecha: selectedDate,
-      dato: modalContent,
-    };
-    getDayFree(date,3);
-  };
-  //
+  const { cartCount, setCartCount } = useContext(MuebleContext);
   const {
     isOpen,
     modalContent,
@@ -55,45 +41,47 @@ const ModalRental = () => {
     reserveOk,
     setRental,
     rental,
-    cantidad, 
-    // setCantidad
+    cantidad,
   } = useModal();
-  
+  //PARA EL CALENDARIO
+  // const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+    getDayFree(modalContent.id, date);
+  };
+  //
+
+  const handleClose = () => {
+    setSelectedDate(null);
+    closeModal();
+  };
 
   const handleConfirm = () => {
     if (typeof onConfirm === "function") {
-      // const muebles = { ...modalContent, ...input, selectedDate };
-      localStorage.setItem('fecha',selectedDate)
+       localStorage.setItem("fecha", new Date(selectedDate).toISOString());
 
-      // const muebles = { id: modalContent.id, fecha: selectedDate };
-      // setCantidad(getDayFree(dato));
-      setRental(prevState => ({
+      setRental((prevState) => ({
         ...prevState,
         muebles: [
-          ...prevState.muebles,  // Mantiene los muebles existentes
+          ...prevState.muebles, // Mantiene los muebles existentes
           {
             id: modalContent.id,
             cantidad: input,
             detalle: modalContent.name,
-            precio: modalContent.unitPrice
-          }
+            precio: modalContent.unitPrice,
+          },
         ],
-        fechaAlquiler:selectedDate,
+        fechaAlquiler: selectedDate,
       }));
+
+      setCartCount(Number(cartCount) + Number(input));
      
-      setCartCount(Number(cartCount)+Number(input))
-      console.log("confirmado rental", rental);
-      //onConfirm(data); // Solo ejecuta si es una función
     }
- 
 
     closeModal(); // Cierra el modal
-
   };
 
-
-
-  
   return (
     <Modal isCentered isOpen={isOpen} onClose={closeModal}>
       {overlay}
@@ -117,32 +105,35 @@ const ModalRental = () => {
             </Box>
           )}
           <Box mt={4}>
-          {
-            !selectedDate &&
-            <SimpleDatePicker
-              value={selectedDate}
-              onChange={handleDateChange}
-              
-            />
-          }
+            {!selectedDate && (
+              <SimpleDatePicker
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            )}
           </Box>
-          {cantidad > 0 && <Text>Unidades Disponibles {cantidad}</Text>}
-          <Text>Ingrese la cantidad</Text>
-          <Input
-            type="number"
-            // value={input.cantidad}
-            value={input}
-            onChange={(e) => setInput(Number(e.target.value))}
-            // onChange={(e) => setInput({ ...input, cantidad: e.target.value })}
-          />
-          {reserveOk && (
+          {selectedDate && (
+            <Box>
+            {cantidad}
+              {cantidad > 0 && <Text>Unidades Disponibles {cantidad}</Text>}
+              <Text>Ingrese la cantidad</Text>
+              <Input
+                type="number"
+                // value={input.cantidad}
+                value={input}
+                onChange={(e) => setInput(Number(e.target.value))}
+                // onChange={(e) => setInput({ ...input, cantidad: e.target.value })}
+              />
+            </Box>
+          )}
+          {/* {reserveOk && (
             <Text fontSize={"2em"} color={"green.400"}>
               Mensaje del back con o sin disponibilidad y la cantidad
             </Text>
-          )}
+          )} */}
         </ModalBody>
         <ModalFooter>
-          {reserveOk && (
+          {cantidad > 0 && (
             <Button
               onClick={() => handleConfirm()}
               mx={"1"}
@@ -153,7 +144,7 @@ const ModalRental = () => {
             </Button>
           )}
           <Button
-            onClick={() => closeModal()}
+            onClick={() => handleClose()}
             mx={"1"}
             fontSize={"sm"}
             bgColor={"red.400"}

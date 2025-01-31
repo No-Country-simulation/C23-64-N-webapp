@@ -16,6 +16,7 @@ import DetailCart from "./pages/DetailCart";
 import AdminPanel from "./pages/AdminPanel";
 
 
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +29,8 @@ function App() {
                 <Route path="/contacto" element={<Contacto />} />
                 <Route path="/productos" element={<Products />} />
                 <Route path="/producto/:id" element={<Product />} />
+                <Route path="/carrito" element={<DetailCart/>} />
+                
                 <Route path="/category/:id" element={<Category />} />
                 <Route path="/adminlogin" element={<AdminLogin />} />
                 <Route path="/adminpanel" element={<AdminPanel/>} />

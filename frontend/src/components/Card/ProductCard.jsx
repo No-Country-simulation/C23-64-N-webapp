@@ -16,10 +16,11 @@ import { Link } from "react-router-dom";
 
 import { useModal } from "../../Context/ModalContext";
 import ModalRental from "../Modal/ModalRental";
+import { formatDateToString } from "../../assets/utilities";
 
 const ProductCard = ({ disponible=true ,producto}) => {
  
-  const { openModal, closeModal,onConfirm,getDayFree } = useModal();
+  const { openModal, closeModal,onConfirm,getDayFree,setSelectedDate } = useModal();
 
   const productConfirm=(data)=>{
     localStorage.setItem('alquiler', JSON.stringify(data))
@@ -29,13 +30,11 @@ const ProductCard = ({ disponible=true ,producto}) => {
    const handleOpenModal = (product) => {
 
     const fecha = localStorage.getItem('fecha');
-    console.log(fecha)
-    if(fecha!==null){
+   if(fecha!==null){
       //llamar al endpoint con fecha para obtener la cantidad
-      getDayFree(fecha,4)
-    }else{
-      //  openModal(product,productConfirm)
-      getDayFree();
+     
+      setSelectedDate(fecha)
+      getDayFree(product.id,fecha)
     }
 
     openModal(product);

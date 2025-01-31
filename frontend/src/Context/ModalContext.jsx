@@ -9,12 +9,12 @@ const ModalContext = createContext();
 export const ModalProvider = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
-  const [onConfirm, setOnConfirm] = useState(()=>()=>{});
+  const [onConfirm, setOnConfirm] = useState(() => () => { });
   const [reserveOk, setReserveOk] = useState(false);
   const [cantidad, setCantidad] = useState(0);
 
   const initialValueRental = {
-    cliente:{
+    cliente: {
       nombre: '',
       apellido: '',
       dni: '',
@@ -22,57 +22,38 @@ export const ModalProvider = ({ children }) => {
       email: '',
       direccion: '',
     },
-    muebles:[],
-    fechaAlquiler:'',
-    total:'',
-    registrarCliente:''
+    muebles: [],
+    fechaAlquiler: '',
+    total: '',
+    registrarCliente: ''
   }
-  
-  const [rental,setRental]=useState(initialValueRental)
+
+  const [rental, setRental] = useState(initialValueRental)
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
-//para el calendario
-const [selectedDate, setSelectedDate] = useState(null);
+  //para el calendario
+  const [selectedDate, setSelectedDate] = useState(null);
 
-const getDayFree= async(fecha='',libre=0,id=null)=>{
-  const params={
-    "id":id?id:null,
-    "date":(fecha!='')? formatDateToString(fecha):null,
-    
+  const getDayFree = async (id, fecha) => {
+    try {
+        let response = await axios.get(`${baseURL}/furniture/${id}?date=${formatDateToString(new Date(fecha))}`);
+         setCantidad(response.data.stock)
+      
+    } catch (error) {
+      console.error("Error posible falla de fecha:", error);
     }
   
-  try {
-    const response = await axios.get(`${baseURL}/furniture/`,{params});
-    console.log(response.data)
 
-  } catch (error) {
-    console.error("Error fetching category:", error);
-    }
-  //mientras no esta el endpoint
-  // if(fecha!=''){
-  //   console.log("Info para el endpoint",fecha);
-  //   if(libre>0){
-  //     setReserveOk(true)
-  //     setCantidad(libre)
-  //   }else{
-  //     setReserveOk(false);
-  //   }
-  // }else{
-  //   setReserveOk(false);
-  //   setCantidad(0)
-  // }
-   
-  
 
-}
+  }
 
 
   // Función para abrir el modal
 
   // const openModal = (content, confirmCallback) => {
   const openModal = (content) => {
-    
+
     setModalContent(content);
     // setOnConfirm(() => (typeof confirmCallback === "function" ? confirmCallback : () => {}));
     setIsOpen(true);
@@ -82,19 +63,20 @@ const getDayFree= async(fecha='',libre=0,id=null)=>{
   const closeModal = () => {
     onConfirm(rental)
     setIsOpen(false);
+    setCantidad(0);
     setModalContent(null);
-    setOnConfirm(() => () => {}); 
+    setOnConfirm(() => () => { });
   };
-  useEffect(()=>{
-    localStorage.setItem('rental',JSON.stringify(rental))
-    // console.log(rental)
-  },[rental])
+  useEffect(() => {
+    localStorage.setItem('rental', JSON.stringify(rental))
+ 
+  }, [rental])
   return (
     <ModalContext.Provider
-      value={{ 
-        isOpen, 
-        openModal, 
-        closeModal, 
+      value={{
+        isOpen,
+        openModal,
+        closeModal,
         modalContent,
         onConfirm,
         setSelectedDate,
@@ -103,10 +85,10 @@ const getDayFree= async(fecha='',libre=0,id=null)=>{
         reserveOk,
         setRental,
         rental,
-        
+
         setCantidad,
         cantidad,
-         }}
+      }}
     >
       {children}
       {/* {isOpen && <Modal>{modalContent}</Modal>} */}
