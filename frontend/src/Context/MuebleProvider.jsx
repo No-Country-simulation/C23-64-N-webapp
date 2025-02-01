@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { MuebleContext } from "./MuebleContext";
+import {useEffect, useState} from "react";
+import {MuebleContext} from "./MuebleContext";
 import axios from "axios";
 
-export const MuebleProvider = ({ children }) => {
+export const MuebleProvider = ({children}) => {
   const [furniture, setFurniture] = useState([]);
-  const [reservado,setReservado]=useState(0)
+  const [reservado, setReservado] = useState(null)
   const [category, setCategory] = useState([]);
-  const [rol, setRol] = useState({ rol: "user" });
+  const [rol, setRol] = useState({rol: "user"});
   const [cartCount, setCartCount] = useState(0);
- 
+
 
   const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
 
@@ -28,10 +28,10 @@ export const MuebleProvider = ({ children }) => {
       console.error("Error fetching category:", error);
     }
   };
-   //actualizar furniture
-   const updateFurniture = async (furniture) => {
+  //actualizar furniture
+  const updateFurniture = async (furniture) => {
     try {
-      await axios.patch(`${baseURL}/furniture`,furniture);
+      await axios.patch(`${baseURL}/furniture`, furniture);
     } catch (error) {
       console.error("Error Post furniture:", error);
     }
@@ -39,24 +39,23 @@ export const MuebleProvider = ({ children }) => {
   //agregar furniture
   const postFurniture = async (furniture) => {
     try {
-      await axios.post(`${baseURL}/furniture`,furniture);
+      await axios.post(`${baseURL}/furniture`, furniture);
     } catch (error) {
       console.error("Error Post furniture:", error);
     }
   };
   //registrar alquiler
-  const postAlquiler = async(alquiler) => {
+  const postAlquiler = async (alquiler) => {
     try {
-      await axios.post(`${baseURL}/rentals`,alquiler)
-      .then((response) => {
-        localStorage.setItem("id",response.data.id)
-       
-      })
+      await axios.post(`${baseURL}/rentals`, alquiler)
+        .then((response) => {
+          setReservado(response.data.id)
+        })
     } catch (error) {
       console.error("Error fetching category:", error);
     }
   };
- 
+
 
   useEffect(() => {
     getFurniture();
@@ -83,7 +82,6 @@ export const MuebleProvider = ({ children }) => {
         updateFurniture,
         reservado,
         setReservado,
-       
       }}
     >
       {children}

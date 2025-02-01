@@ -1,41 +1,36 @@
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import {
+  Button,
   Center,
   Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  HStack,
   Input,
   Stack,
-  Text,
-  VStack,
-  Button,
-  HStack,
-  Checkbox,
-  Box,
-} from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
-import {
   Table,
-  Thead,
-  Tbody,
-  Tfoot,
-  Tr,
-  Th,
-  Td,
   TableCaption,
   TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Tfoot,
+  Th,
+  Thead,
+  Tr,
+  VStack,
 } from "@chakra-ui/react";
-import { MuebleContext } from "../Context/MuebleContext";
-import { useModal } from "../Context/ModalContext";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { AlertDialogComponent } from "../components/AlertDialog/AlertDialog";
-import { formatDateToString } from "../assets/utilities";
-import { useNavigate } from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
+import {MuebleContext} from "../Context/MuebleContext";
+import {useModal} from "../Context/ModalContext";
+import {DeleteIcon} from "@chakra-ui/icons";
+import {AlertDialogComponent} from "../components/AlertDialog/AlertDialog";
+import {useNavigate} from "react-router-dom";
 
 const DetailCart = () => {
-  const { rental, setRental } = useModal();
-  const { setCartCount, cartCount, postAlquiler, reservado, setReservado } =
+  const {rental, setRental} = useModal();
+  const {setCartCount, cartCount, postAlquiler, reservado} =
     useContext(MuebleContext);
   const [total, setTotal] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
@@ -47,14 +42,14 @@ const DetailCart = () => {
     const pro = muebles.find((item) => item.id === id);
     setCartCount(cartCount - pro.cantidad);
     const extracto = muebles.filter((item) => item.id !== id);
-    setRental({ ...rental, muebles: extracto });
+    setRental({...rental, muebles: extracto});
   };
 
   const {
     handleSubmit,
     register,
     reset,
-    formState: { errors, isSubmitting },
+    formState: {errors, isSubmitting},
   } = useForm({
     defaultValues: {
       firstName: "Omar Dario",
@@ -82,15 +77,14 @@ const DetailCart = () => {
       quantity: item.cantidad,
     }));
     const alquiler = {
-      clientInfo: { ...values },
+      clientInfo: {...values},
       rentalDetails: rentalDetails,
-      rentalDate: formatDateToString(rental.fechaAlquiler),
+      rentalDate: rental.fechaAlquiler.toISOString().split('T')[0],
     };
 
     postAlquiler(alquiler);
     // Mostrar la alerta
-    setReservado(localStorage.getItem("id"));
-  
+
     setAlertMessage(JSON.stringify(alquiler, null, 2));
     setShowAlert(true);
 
@@ -122,7 +116,7 @@ const DetailCart = () => {
             <Table variant="striped" colorScheme="brown">
               <TableCaption fontSize={"2xl"} color={"red.400"}>
                 Detalle de los muebles alquilados para la fecha:{" "}
-                {formatDateToString(rental.fechaAlquiler)}{" "}
+                {rental.fechaAlquiler.toISOString().split('T')[0]}{" "}
               </TableCaption>
               <Thead>
                 <Tr>
@@ -310,7 +304,7 @@ const DetailCart = () => {
       )}
       <Center>
         {reservado && (
-          <VStack mx={'25px'} >
+          <VStack mx={'25px'}>
             <Text fontSize={'3xl'} textAlign={'center'} color={'olivaClaro'}>
               Tu reserva ha sido confirmada, se ha enviado un correo electrónico
               con los datos correspondientes. El día del alquiler, presentate
@@ -321,7 +315,7 @@ const DetailCart = () => {
               src={`https://c23-64-n-webapp-development.up.railway.app/rentals/${reservado}/qrcode`}
             />
             <Text fontSize={'2xl'} color={'green.400'}> Este código también fue enviado a tu casilla
-            de correo</Text>
+              de correo</Text>
           </VStack>
         )}
       </Center>
