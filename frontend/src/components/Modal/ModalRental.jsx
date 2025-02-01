@@ -27,8 +27,9 @@ const ModalRental = () => {
 
   const [overlay] = useState(<OverlayOne />);
   const [input, setInput] = useState("");
+  const [showDatePicker, setShowDatePicker] = useState(true); // Estado para controlar la visibilidad del DatePicker
 
-  const { cartCount, setCartCount, set_furniture } = useContext(MuebleContext);
+  const { cartCount, setCartCount, checkAvailability, cantidad, addRental } = useContext(MuebleContext); // Incluir cantidad aquí
   const {
     isOpen,
     modalContent,
@@ -36,13 +37,12 @@ const ModalRental = () => {
     onConfirm,
     selectedDate,
     setSelectedDate,
-    setRental,
-    cantidad,
   } = useModal();
 
   const handleDateChange = (date) => {
-    setSelectedDate(date);
-    set_furniture(modalContent.id, date); // Llamar a set_furniture con el id y la fecha
+    setSelectedDate(date); // Establecer la fecha seleccionada
+    checkAvailability(modalContent.id, date); // Llamar a checkAvailability con el id y la fecha
+    setShowDatePicker(false); // Ocultar el DatePicker
   };
 
   const handleClose = () => {
@@ -54,19 +54,14 @@ const ModalRental = () => {
     if (typeof onConfirm === "function") {
       localStorage.setItem("fecha", new Date(selectedDate).toISOString());
 
-      setRental((prevState) => ({
-        ...prevState,
-        muebles: [
-          ...prevState.muebles,
-          {
-            id: modalContent.id,
-            cantidad: input,
-            detalle: modalContent.name,
-            precio: modalContent.unitPrice,
-          },
-        ],
+      // Store rental data in context
+      addRental({
+        id: modalContent.id,
+        cantidad: input,
+        detalle: modalContent.name,
+        precio: modalContent.unitPrice,
         fechaAlquiler: selectedDate,
-      }));
+      });
 
       setCartCount(Number(cartCount) + Number(input));
     }
@@ -96,12 +91,14 @@ const ModalRental = () => {
               </Text>
             </Box>
           )}
-          <Box mt={4}>
-            <SimpleDatePicker
-              value={selectedDate}
-              onChange={handleDateChange}
-            />
-          </Box>
+          {showDatePicker && ( // Mostrar el DatePicker solo si showDatePicker es true
+            <Box mt={4}>
+              <SimpleDatePicker
+                value={selectedDate}
+                onChange={handleDateChange}
+              />
+            </Box>
+          )}
           {selectedDate && (
             <Box>
               {cantidad}

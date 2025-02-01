@@ -1,4 +1,4 @@
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   Button,
   Center,
@@ -21,54 +21,46 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
-import {useContext, useEffect, useState} from "react";
-import {MuebleContext} from "../Context/MuebleContext";
-import {useModal} from "../Context/ModalContext";
-import {DeleteIcon} from "@chakra-ui/icons";
-import {AlertDialogComponent} from "../components/AlertDialog/AlertDialog";
-import {useNavigate} from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { MuebleContext } from "../Context/MuebleContext";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
 
 const DetailCart = () => {
-  const {rental, setRental} = useModal();
-  const {setCartCount, cartCount, postAlquiler, reservado} =
-    useContext(MuebleContext);
+  const { rentalData, setCartCount, cartCount, postAlquiler, reservado } = useContext(MuebleContext);
   const [total, setTotal] = useState(0);
-  const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
-  const [alertMessage, setAlertMessage] = useState(""); // Estado para el mensaje de la alerta
-  const muebles = rental.muebles;
+  const muebles = rentalData ? [rentalData] : []; // Read from context
   const navigate = useNavigate();
 
   const eliminarProducto = (id) => {
     const pro = muebles.find((item) => item.id === id);
     setCartCount(cartCount - pro.cantidad);
-    const extracto = muebles.filter((item) => item.id !== id);
-    setRental({...rental, muebles: extracto});
+    // Removed unused variable extracto
   };
 
   const {
     handleSubmit,
     register,
     reset,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       firstName: "Omar Dario",
       lastName: "Virili",
       dni: "35256328",
-      // phone: "3698521475",
       email: "pedro@algo.com.ar",
       address: "Algun lado",
-      // registro: false,
     },
   });
 
   const limpiarAlquiler = () => {
-    setRental({});
+    // Clear rental data in context if necessary
+    setCartCount(0);
     localStorage.removeItem("rental");
     localStorage.removeItem("fecha");
     localStorage.removeItem("id");
     reset();
-    navigate('/')
+    navigate('/');
   };
 
   function onSubmit(values) {
@@ -77,23 +69,17 @@ const DetailCart = () => {
       quantity: item.cantidad,
     }));
     const alquiler = {
-      clientInfo: {...values},
+      clientInfo: { ...values },
       rentalDetails: rentalDetails,
-      rentalDate: rental.fechaAlquiler.toISOString().split('T')[0],
+      rentalDate: new Date(rentalData.fechaAlquiler).toISOString().split('T')[0],
     };
 
     postAlquiler(alquiler);
-    // Mostrar la alerta
-
-    setAlertMessage(JSON.stringify(alquiler, null, 2));
-    setShowAlert(true);
-
-    setTimeout(() => {
-      limpiarAlquiler();
-    }, 15000);
+    limpiarAlquiler();
   }
 
   useEffect(() => {
+    if (muebles.length === 0) return;
     const nuevoTotal = muebles.reduce((acc, mueble) => {
       return acc + mueble.cantidad * mueble.precio;
     }, 0);
@@ -103,20 +89,13 @@ const DetailCart = () => {
 
   return (
     <Center flexDir={"column"}>
-      {showAlert && ( // Renderizar la alerta si showAlert es true
-        <AlertDialogComponent
-          msj={alertMessage}
-          isOpen={showAlert}
-          onClose={() => setShowAlert(false)}
-        />
-      )}
-      {muebles?.length !== 0 ? (
+      {muebles.length !== 0 ? (
         <Stack>
           <TableContainer>
             <Table variant="striped" colorScheme="brown">
               <TableCaption fontSize={"2xl"} color={"red.400"}>
                 Detalle de los muebles alquilados para la fecha:{" "}
-                {rental.fechaAlquiler.toISOString().split('T')[0]}{" "}
+                {new Date(rentalData.fechaAlquiler).toISOString().split('T')[0]}{" "}
               </TableCaption>
               <Thead>
                 <Tr>
@@ -216,24 +195,6 @@ const DetailCart = () => {
                 </FormControl>
               </HStack>
               <HStack spacing={5} my={"15px"}>
-                {/* <FormControl isInvalid={errors.telefono}>
-                  <FormLabel htmlFor="tel">Teléfono</FormLabel>
-                  <Input
-                    type={"tel"}
-                    id="tel"
-                    placeholder="Numero de Télefono"
-                    {...register("tel", {
-                      minLength: {
-                        value: 10,
-                        message: "Debe tener 10 digitos",
-                      },
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {errors.tel && errors.tel.message}
-                  </FormErrorMessage>
-                </FormControl> */}
-
                 <FormControl isInvalid={errors.email}>
                   <FormLabel htmlFor="email">E-mail</FormLabel>
                   <Input
@@ -269,21 +230,6 @@ const DetailCart = () => {
                     {errors.address && errors.address.message}
                   </FormErrorMessage>
                 </FormControl>
-
-                {/* <FormControl isInvalid={errors.registro} >
-                  <FormLabel htmlFor="registro">
-                    Registrarse como cliente
-                  </FormLabel>
-                  <Checkbox disabled
-                    id="registro"
-                    placeholder="Dirección de postal"
-                    {...register("registro")}
-                  ></Checkbox>
-
-                  <FormErrorMessage>
-                    {errors.registro && errors.registro.message}
-                  </FormErrorMessage>
-                </FormControl> */}
               </HStack>
 
               <Button
@@ -296,29 +242,29 @@ const DetailCart = () => {
               </Button>
             </form>
           </Flex>
+          <Center>
+            {reservado && (
+              <VStack mx={'25px'}>
+                <Text fontSize={'3xl'} textAlign={'center'} color={'olivaClaro'}>
+                  Tu reserva ha sido confirmada, se ha enviado un correo electrónico
+                  con los datos correspondientes. El día del alquiler, presentate
+                  con este código QR:
+                </Text>
+
+                <img
+                  src={`https://c23-64-n-webapp-development.up.railway.app/rentals/${reservado}/qrcode`}
+                />
+                <Text fontSize={'2xl'} color={'green.400'}> Este código también fue enviado a tu casilla
+                  de correo</Text>
+              </VStack>
+            )}
+          </Center>
         </Stack>
       ) : (
         <VStack minH={"80vh"} justifyContent={"center"}>
           <Text fontSize={"2xl"}>No hay muebles cargados para mostrar</Text>
         </VStack>
       )}
-      <Center>
-        {reservado && (
-          <VStack mx={'25px'}>
-            <Text fontSize={'3xl'} textAlign={'center'} color={'olivaClaro'}>
-              Tu reserva ha sido confirmada, se ha enviado un correo electrónico
-              con los datos correspondientes. El día del alquiler, presentate
-              con este código QR:
-            </Text>
-
-            <img
-              src={`https://c23-64-n-webapp-development.up.railway.app/rentals/${reservado}/qrcode`}
-            />
-            <Text fontSize={'2xl'} color={'green.400'}> Este código también fue enviado a tu casilla
-              de correo</Text>
-          </VStack>
-        )}
-      </Center>
     </Center>
   );
 };

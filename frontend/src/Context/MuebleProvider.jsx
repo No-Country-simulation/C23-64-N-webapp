@@ -1,6 +1,7 @@
 import { useEffect, useReducer } from "react";
 import { MuebleContext } from "./MuebleContext";
 import axios from "axios";
+import PropTypes from "prop-types"; // Import PropTypes
 
 // Definir las acciones
 const ACTIONS = {
@@ -8,8 +9,10 @@ const ACTIONS = {
   SET_CATEGORY: "SET_CATEGORY",
   SET_CART_COUNT: "SET_CART_COUNT",
   SET_RESERVADO: "SET_RESERVADO",
-  SET_ROL: "SET_ROL", // Nueva acción para rol
-  CHECK_AVAILABILITY: "CHECK_AVAILABILITY", // Nueva acción para disponibilidad
+  SET_ROL: "SET_ROL",
+  CHECK_AVAILABILITY: "CHECK_AVAILABILITY",
+  ADD_RENTAL: "ADD_RENTAL", // New action for adding rental
+  SET_RENTAL_DATA: "SET_RENTAL_DATA", // New action for setting rental data
 };
 
 // Reducer para manejar el estado de los muebles
@@ -25,8 +28,12 @@ const furnitureReducer = (state, action) => {
       return { ...state, reservado: action.payload };
     case ACTIONS.SET_ROL:
       return { ...state, rol: action.payload };
-    case ACTIONS.CHECK_AVAILABILITY: // Manejar la acción de disponibilidad
-      return { ...state, availability: action.payload };
+    case ACTIONS.CHECK_AVAILABILITY:
+      return { ...state, cantidad: action.payload }; // Guardar el stock en cantidad
+    case ACTIONS.ADD_RENTAL:
+      return { ...state }; // Update state as necessary
+    case ACTIONS.SET_RENTAL_DATA:
+      return { ...state, rentalData: action.payload }; // Set rental data in state
     default:
       return state;
   }
@@ -38,8 +45,9 @@ export const MuebleProvider = ({ children }) => {
     category: [],
     cartCount: 0,
     reservado: null,
-    rol: "user", // Establecer rol por defecto
-    availability: null, // Estado para disponibilidad
+    rol: "user",
+    cantidad: null, // Estado para la cantidad disponible
+    rentalData: null, // New state for rental data
   };
 
   const [state, dispatch] = useReducer(furnitureReducer, initialState);
@@ -57,13 +65,15 @@ export const MuebleProvider = ({ children }) => {
 
   const checkAvailability = async (id, date) => {
     try {
-      const response = await axios.get(`${baseURL}/furniture/availability`, {
-        params: { id, date },
-      });
-      dispatch({ type: ACTIONS.CHECK_AVAILABILITY, payload: response.data });
+      const response = await axios.get(`${baseURL}/furniture/${id}?date=${new Date(date).toISOString().split('T')[0]}`);
+      dispatch({ type: ACTIONS.CHECK_AVAILABILITY, payload: response.data.stock }); // Asignar el stock a la variable de estado
     } catch (error) {
       console.error("Error checking availability:", error);
     }
+  };
+
+  const addRental = async (rentalData) => {
+    dispatch({ type: ACTIONS.SET_RENTAL_DATA, payload: rentalData }); // Store rental data in context
   };
 
   const getCategory = async () => {
@@ -88,13 +98,20 @@ export const MuebleProvider = ({ children }) => {
         cartCount: state.cartCount,
         reservado: state.reservado,
         rol: state.rol,
-        availability: state.availability, // Proveer disponibilidad en el contexto
+        cantidad: state.cantidad, // Proveer cantidad en el contexto
+        rentalData: state.rentalData, // Provide rental data in context
         setCartCount: (count) => dispatch({ type: ACTIONS.SET_CART_COUNT, payload: count }),
         setReservado: (reservado) => dispatch({ type: ACTIONS.SET_RESERVADO, payload: reservado }),
-        set_furniture: (id, date) => checkAvailability(id, date), // Función para verificar disponibilidad
+        checkAvailability,
+        addRental, // Provide the addRental function in context
       }}
     >
       {children}
     </MuebleContext.Provider>
   );
+};
+
+// PropTypes validation
+MuebleProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };

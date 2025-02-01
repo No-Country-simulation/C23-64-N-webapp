@@ -15,33 +15,25 @@ import React from "react";
 import {Link} from "react-router-dom";
 
 import {useModal} from "../../Context/ModalContext";
-import ModalRental from "../Modal/ModalRental";
+import { useContext } from "react";
+import { MuebleContext } from "../../Context/MuebleContext";
 
 const ProductCard = ({disponible = true, producto}) => {
-
-  const {openModal, closeModal, onConfirm, getDayFree, setSelectedDate} = useModal();
-
-  const productConfirm = (data) => {
-    localStorage.setItem('alquiler', JSON.stringify(data))
-  }
-
+  const { openModal, closeModal } = useModal();
+  const { checkAvailability } = useContext(MuebleContext);
 
   const handleOpenModal = (product) => {
-
     const fecha = localStorage.getItem('fecha');
     if (fecha !== null) {
-      //llamar al endpoint con fecha para obtener la cantidad
-
-      setSelectedDate(fecha)
-      getDayFree(product.id, fecha)
+      // Llamar al endpoint con fecha para obtener la cantidad
+      checkAvailability(product.id, fecha);
     }
 
-    openModal(product);
+    openModal({ ...product }); // Pasar el objeto completo del producto
   };
+
   return (
     <>
-
-
       <Card
         bgColor='brown.100'
         maxW="sm"
@@ -115,10 +107,8 @@ const ProductCard = ({disponible = true, producto}) => {
               <Button bgColor={"dorado"}>Detalles</Button>
             </Link>
           </ButtonGroup>
-
         </CardFooter>
       </Card>
-
     </>
   );
 };
