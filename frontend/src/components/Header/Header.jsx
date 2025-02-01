@@ -1,4 +1,4 @@
-import { Box, Button, Center, Container, HStack, Img } from "@chakra-ui/react";
+import { Box, Button, Center, Img } from "@chakra-ui/react";
 import logo from "/img/logo.png";
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <>
-      {rol && rol.rol !== "admin" && ( // Check if rol is defined
+      {rol !== "admin" && ( // Hide navbar if rol is "admin"
         <Center
           bg="brown.100"
           justifyContent={"space-between"}

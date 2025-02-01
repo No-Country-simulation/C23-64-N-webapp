@@ -10,14 +10,12 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  useDisclosure,
 } from "@chakra-ui/react";
 
 import { useModal } from "../../Context/ModalContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { SimpleDatePicker } from "simple-chakra-ui-datepicker";
 import { MuebleContext } from "../../Context/MuebleContext";
-import { colgroup } from "framer-motion/client";
 
 const ModalRental = () => {
   const OverlayOne = () => (
@@ -26,10 +24,11 @@ const ModalRental = () => {
       backdropFilter="blur(10px) hue-rotate(90deg)"
     />
   );
-  const [overlay, setOverlay] = useState(<OverlayOne />);
+
+  const [overlay] = useState(<OverlayOne />);
   const [input, setInput] = useState("");
 
-  const { cartCount, setCartCount } = useContext(MuebleContext);
+  const { cartCount, setCartCount, set_furniture } = useContext(MuebleContext);
   const {
     isOpen,
     modalContent,
@@ -37,20 +36,14 @@ const ModalRental = () => {
     onConfirm,
     selectedDate,
     setSelectedDate,
-    getDayFree,
-    reserveOk,
     setRental,
-    rental,
     cantidad,
   } = useModal();
-  //PARA EL CALENDARIO
-  // const [selectedDate, setSelectedDate] = useState(null);
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    getDayFree(modalContent.id, date);
+    set_furniture(modalContent.id, date); // Llamar a set_furniture con el id y la fecha
   };
-  //
 
   const handleClose = () => {
     setSelectedDate(null);
@@ -59,12 +52,12 @@ const ModalRental = () => {
 
   const handleConfirm = () => {
     if (typeof onConfirm === "function") {
-       localStorage.setItem("fecha", new Date(selectedDate).toISOString());
+      localStorage.setItem("fecha", new Date(selectedDate).toISOString());
 
       setRental((prevState) => ({
         ...prevState,
         muebles: [
-          ...prevState.muebles, // Mantiene los muebles existentes
+          ...prevState.muebles,
           {
             id: modalContent.id,
             cantidad: input,
@@ -76,10 +69,9 @@ const ModalRental = () => {
       }));
 
       setCartCount(Number(cartCount) + Number(input));
-     
     }
 
-    closeModal(); // Cierra el modal
+    closeModal();
   };
 
   return (
@@ -105,37 +97,28 @@ const ModalRental = () => {
             </Box>
           )}
           <Box mt={4}>
-            {!selectedDate && (
-              <SimpleDatePicker
-                value={selectedDate}
-                onChange={handleDateChange}
-              />
-            )}
+            <SimpleDatePicker
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
           </Box>
           {selectedDate && (
             <Box>
-            {cantidad}
+              {cantidad}
               {cantidad > 0 && <Text>Unidades Disponibles {cantidad}</Text>}
               <Text>Ingrese la cantidad</Text>
               <Input
                 type="number"
-                // value={input.cantidad}
                 value={input}
                 onChange={(e) => setInput(Number(e.target.value))}
-                // onChange={(e) => setInput({ ...input, cantidad: e.target.value })}
               />
             </Box>
           )}
-          {/* {reserveOk && (
-            <Text fontSize={"2em"} color={"green.400"}>
-              Mensaje del back con o sin disponibilidad y la cantidad
-            </Text>
-          )} */}
         </ModalBody>
         <ModalFooter>
           {cantidad > 0 && (
             <Button
-              onClick={() => handleConfirm()}
+              onClick={handleConfirm}
               mx={"1"}
               fontSize={"sm"}
               bgColor={"green.400"}
@@ -144,7 +127,7 @@ const ModalRental = () => {
             </Button>
           )}
           <Button
-            onClick={() => handleClose()}
+            onClick={handleClose}
             mx={"1"}
             fontSize={"sm"}
             bgColor={"red.400"}

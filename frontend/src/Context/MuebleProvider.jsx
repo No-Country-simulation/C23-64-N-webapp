@@ -8,7 +8,8 @@ const ACTIONS = {
   SET_CATEGORY: "SET_CATEGORY",
   SET_CART_COUNT: "SET_CART_COUNT",
   SET_RESERVADO: "SET_RESERVADO",
-  SET_ROL: "SET_ROL", // New action for rol
+  SET_ROL: "SET_ROL", // Nueva acción para rol
+  CHECK_AVAILABILITY: "CHECK_AVAILABILITY", // Nueva acción para disponibilidad
 };
 
 // Reducer para manejar el estado de los muebles
@@ -22,8 +23,10 @@ const furnitureReducer = (state, action) => {
       return { ...state, cartCount: action.payload };
     case ACTIONS.SET_RESERVADO:
       return { ...state, reservado: action.payload };
-    case ACTIONS.SET_ROL: // Handle rol action
+    case ACTIONS.SET_ROL:
       return { ...state, rol: action.payload };
+    case ACTIONS.CHECK_AVAILABILITY: // Manejar la acción de disponibilidad
+      return { ...state, availability: action.payload };
     default:
       return state;
   }
@@ -35,7 +38,8 @@ export const MuebleProvider = ({ children }) => {
     category: [],
     cartCount: 0,
     reservado: null,
-    rol: null, // Initialize rol
+    rol: "user", // Establecer rol por defecto
+    availability: null, // Estado para disponibilidad
   };
 
   const [state, dispatch] = useReducer(furnitureReducer, initialState);
@@ -48,6 +52,17 @@ export const MuebleProvider = ({ children }) => {
       dispatch({ type: ACTIONS.SET_FURNITURE, payload: response.data });
     } catch (error) {
       console.error("Error fetching furniture:", error);
+    }
+  };
+
+  const checkAvailability = async (id, date) => {
+    try {
+      const response = await axios.get(`${baseURL}/furniture/availability`, {
+        params: { id, date },
+      });
+      dispatch({ type: ACTIONS.CHECK_AVAILABILITY, payload: response.data });
+    } catch (error) {
+      console.error("Error checking availability:", error);
     }
   };
 
@@ -72,10 +87,11 @@ export const MuebleProvider = ({ children }) => {
         category: state.category,
         cartCount: state.cartCount,
         reservado: state.reservado,
-        rol: state.rol, // Provide rol in context
+        rol: state.rol,
+        availability: state.availability, // Proveer disponibilidad en el contexto
         setCartCount: (count) => dispatch({ type: ACTIONS.SET_CART_COUNT, payload: count }),
         setReservado: (reservado) => dispatch({ type: ACTIONS.SET_RESERVADO, payload: reservado }),
-        setRol: (rol) => dispatch({ type: ACTIONS.SET_ROL, payload: rol }), // Function to set rol
+        set_furniture: (id, date) => checkAvailability(id, date), // Función para verificar disponibilidad
       }}
     >
       {children}
