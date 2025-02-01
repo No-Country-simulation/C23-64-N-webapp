@@ -1,6 +1,5 @@
 import axios from "axios";
-import React, { createContext, useState, useContext, useEffect } from "react";
-import { formatDateToString } from "../assets/utilities";
+import React, {createContext, useContext, useEffect, useState} from "react";
 
 // Crear el contexto del modal
 const ModalContext = createContext();
@@ -37,7 +36,7 @@ export const ModalProvider = ({ children }) => {
 
   const getDayFree = async (id, fecha) => {
     try {
-        let response = await axios.get(`${baseURL}/furniture/${id}?date=${formatDateToString(new Date(fecha))}`);
+        let response = await axios.get(`${baseURL}/furniture/${id}?date=${new Date(fecha).toISOString().split('T')[0]}`);
          setCantidad(response.data.stock)
       
     } catch (error) {
