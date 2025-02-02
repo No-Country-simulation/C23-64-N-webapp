@@ -1,5 +1,7 @@
 package tech.nocountry.c23e64.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import tech.nocountry.c23e64.dto.FurnitureCreateDto;
 import tech.nocountry.c23e64.dto.FurnitureDto;
@@ -23,6 +25,7 @@ public class FurnitureServiceImpl implements FurnitureService {
     private final CategoryRepository categoryRepository;
     private final RentalDetailRepository rentalDetailRepository;
     private final FurnitureMapper furnitureMapper;
+    private final Logger logger = LoggerFactory.getLogger(FurnitureServiceImpl.class);
 
     public FurnitureServiceImpl(FurnitureRepository furnitureRepository, CategoryRepository categoryRepository, RentalDetailRepository rentalDetailRepository, FurnitureMapper furnitureMapper) {
         this.furnitureRepository = furnitureRepository;
@@ -103,11 +106,13 @@ public class FurnitureServiceImpl implements FurnitureService {
     @Override
     public List<FurnitureDto> getAllFurniture(LocalDate date) {
         if (date == null) {
+            logger.info("Getting all furniture without date");
             return furnitureRepository.findAll()
                     .stream()
                     .map(furnitureMapper::toDto).toList();
         }
 
+        logger.info("Getting all furniture with date {}", date);
         return furnitureRepository.findAll().stream()
                 .map(furniture -> {
                     int reservedQuantity = rentalDetailRepository.findTotalReservedByFurnitureAndDate(furniture.getId(), date);

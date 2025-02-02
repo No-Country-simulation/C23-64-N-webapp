@@ -1,28 +1,28 @@
 package tech.nocountry.c23e64.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-import tech.nocountry.c23e64.model.User;
-import tech.nocountry.c23e64.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import tech.nocountry.c23e64.model.UserEntity;
+import tech.nocountry.c23e64.model.UserRole;
+import tech.nocountry.c23e64.repository.UserRepository;
 
 @Component
+@AllArgsConstructor
 public class AdminLoader implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
         if (userRepository.findByUsername("admin").isEmpty()) {
-            User admin = new User();
-            admin.setUsername("admin");
-            admin.setPasswordHash(passwordEncoder.encode("admin123")); // Cambiar esto por una contraseña segura
-            admin.setUserRole("ADMIN");
+            UserEntity admin = UserEntity.builder()
+                    .username("admin")
+                    .password(passwordEncoder.encode("admin123"))
+                    .userRole(UserRole.ROLE_ADMIN)
+                    .build();
             userRepository.save(admin);
         }
     }

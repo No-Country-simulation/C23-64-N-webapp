@@ -3,6 +3,7 @@ package tech.nocountry.c23e64.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -77,12 +78,12 @@ public class GlobalExceptionHandler {
         return problemDetail;
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ProblemDetail handleRuntimeException(RuntimeException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        problemDetail.setType(URI.create("https://httpstatuses.com/500"));
-        problemDetail.setTitle("Internal Server Error");
-        problemDetail.setDetail("Ha ocurrido un error inesperado");
+    @ExceptionHandler(BadCredentialsException.class)
+    public ProblemDetail handleBadCredentials(BadCredentialsException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
+        problemDetail.setType(URI.create("https://httpstatuses.com/401"));
+        problemDetail.setTitle("Unauthorized");
+        problemDetail.setDetail("Credenciales inválidas");
 
         return problemDetail;
     }
@@ -96,4 +97,15 @@ public class GlobalExceptionHandler {
 
         return problemDetail;
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ProblemDetail handleRuntimeException(RuntimeException ex) {
+        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        problemDetail.setType(URI.create("https://httpstatuses.com/500"));
+        problemDetail.setTitle("Internal Server Error");
+        problemDetail.setDetail("Ha ocurrido un error inesperado");
+
+        return problemDetail;
+    }
+
 }

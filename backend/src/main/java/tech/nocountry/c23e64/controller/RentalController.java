@@ -1,5 +1,6 @@
 package tech.nocountry.c23e64.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,6 +28,7 @@ public class RentalController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<RentalDto> addRental(@RequestBody @Valid RentalCreateDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(rentalService.createRental(createDto));
     }
