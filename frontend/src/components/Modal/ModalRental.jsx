@@ -27,9 +27,9 @@ const ModalRental = () => {
 
   const [overlay] = useState(<OverlayOne />);
   const [input, setInput] = useState("");
-  const [showDatePicker, setShowDatePicker] = useState(true); // Estado para controlar la visibilidad del DatePicker
+  const [showDatePicker, setShowDatePicker] = useState(true);
 
-  const { cartCount, setCartCount, checkAvailability, cantidad, addRental } = useContext(MuebleContext); // Incluir cantidad aquí
+  const { cartCount, setCartCount, checkAvailability, cantidad, addRental } = useContext(MuebleContext);
   const {
     isOpen,
     modalContent,
@@ -40,9 +40,9 @@ const ModalRental = () => {
   } = useModal();
 
   const handleDateChange = (date) => {
-    setSelectedDate(date); // Establecer la fecha seleccionada
-    checkAvailability(modalContent.id, date); // Llamar a checkAvailability con el id y la fecha
-    setShowDatePicker(false); // Ocultar el DatePicker
+    setSelectedDate(date);
+    checkAvailability(modalContent.id, date);
+    setShowDatePicker(false);
   };
 
   const handleClose = () => {
@@ -54,16 +54,20 @@ const ModalRental = () => {
     if (typeof onConfirm === "function") {
       localStorage.setItem("fecha", new Date(selectedDate).toISOString());
 
-      // Store rental data in context
       addRental({
-        id: modalContent.id,
-        cantidad: input,
-        detalle: modalContent.name,
-        precio: modalContent.unitPrice,
+        mueble: [{
+          id: modalContent.id,
+          cantidad: input,
+          detalle: modalContent.name,
+          precio: modalContent.unitPrice,
+        }],
         fechaAlquiler: selectedDate,
       });
 
-      setCartCount(Number(cartCount) + Number(input));
+      // Validar y actualizar el contador del carrito
+      if (input > 0) {
+        setCartCount( Number(input)); // Pasar un objeto con la propiedad count
+      }
     }
 
     closeModal();
@@ -91,7 +95,7 @@ const ModalRental = () => {
               </Text>
             </Box>
           )}
-          {showDatePicker && ( // Mostrar el DatePicker solo si showDatePicker es true
+          {showDatePicker && (
             <Box mt={4}>
               <SimpleDatePicker
                 value={selectedDate}

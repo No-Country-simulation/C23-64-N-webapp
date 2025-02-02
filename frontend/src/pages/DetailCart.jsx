@@ -94,8 +94,8 @@ const DetailCart = () => {
           <TableContainer>
             <Table variant="striped" colorScheme="brown">
               <TableCaption fontSize={"2xl"} color={"red.400"}>
-                Detalle de los muebles alquilados para la fecha:{" "}
-                {new Date(rentalData.fechaAlquiler).toISOString().split('T')[0]}{" "}
+                Detalle de los muebles alquilados para la fecha:
+                {new Date(rentalData.fechaAlquiler).toISOString()}
               </TableCaption>
               <Thead>
                 <Tr>

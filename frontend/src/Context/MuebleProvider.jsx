@@ -23,15 +23,23 @@ const furnitureReducer = (state, action) => {
     case ACTIONS.SET_CATEGORY:
       return { ...state, category: action.payload };
     case ACTIONS.SET_CART_COUNT:
-      return { ...state, cartCount: action.payload };
+      return { ...state, cartCount: action.payload.count + state.cartCount};
     case ACTIONS.SET_RESERVADO:
       return { ...state, reservado: action.payload };
     case ACTIONS.SET_ROL:
       return { ...state, rol: action.payload };
     case ACTIONS.CHECK_AVAILABILITY:
       return { ...state, cantidad: action.payload }; // Guardar el stock en cantidad
-    case ACTIONS.ADD_RENTAL:
-      return { ...state }; // Update state as necessary
+    case ACTIONS.ADD_RENTAL: {
+      const existingRental = state.rentalData.find(item => item.fechaAlquiler === action.payload.fechaAlquiler);
+      if (existingRental) {
+        existingRental.mueble.push(...action.payload.mueble); // Update mueble array if exists
+      } else {
+        state.rentalData.push(action.payload); // Add new rental if it doesn't exist
+      }
+
+      return { ...state}; // Update state as necessary
+    }
     case ACTIONS.SET_RENTAL_DATA:
       return { ...state, rentalData: action.payload }; // Set rental data in state
     default:
@@ -47,7 +55,7 @@ export const MuebleProvider = ({ children }) => {
     reservado: null,
     rol: "user",
     cantidad: null, // Estado para la cantidad disponible
-    rentalData: null, // New state for rental data
+    rentalData: [], // Initialize as an array for rental data
   };
 
   const [state, dispatch] = useReducer(furnitureReducer, initialState);
@@ -72,8 +80,8 @@ export const MuebleProvider = ({ children }) => {
     }
   };
 
-  const addRental = async (rentalData) => {
-    dispatch({ type: ACTIONS.SET_RENTAL_DATA, payload: rentalData }); // Store rental data in context
+  const addRental = (rentalData) => {
+    dispatch({ type: ACTIONS.ADD_RENTAL, payload: rentalData }); // Store rental data in context
   };
 
   const getCategory = async () => {

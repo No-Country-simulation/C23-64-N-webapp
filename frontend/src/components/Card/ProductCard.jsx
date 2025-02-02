@@ -11,26 +11,26 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
-import {Link} from "react-router-dom";
-
-import {useModal} from "../../Context/ModalContext";
-import { useContext } from "react";
+import { Link } from "react-router-dom";
+import { useModal } from "../../Context/ModalContext";
+import { useContext } from "react"; // Importar useContext
 import { MuebleContext } from "../../Context/MuebleContext";
+import PropTypes from "prop-types"; // Importar PropTypes
 
-const ProductCard = ({disponible = true, producto}) => {
-  const { openModal, closeModal } = useModal();
+const ProductCard = ({ disponible = true, producto }) => {
+  const { openModal } = useModal();
   const { checkAvailability } = useContext(MuebleContext);
 
   const handleOpenModal = (product) => {
     const fecha = localStorage.getItem('fecha');
     if (fecha !== null) {
-      // Llamar al endpoint con fecha para obtener la cantidad
       checkAvailability(product.id, fecha);
     }
 
-    openModal({ ...product }); // Pasar el objeto completo del producto
+    openModal({ ...product });
   };
+
+ 
 
   return (
     <>
@@ -47,7 +47,7 @@ const ProductCard = ({disponible = true, producto}) => {
             <Box
               w="440px"
               minH="50vh"
-              bgGradient="linear(to-r, , blue.700)"
+              bgGradient="linear(to-r, blue.700)"
               bgPosition={'center'}
               bgSize={'cover'}
               bgImage={`url(${producto.imageUri})`}
@@ -96,12 +96,12 @@ const ProductCard = ({disponible = true, producto}) => {
             >$ {producto.unitPrice}</Text>
           </Stack>
         </CardBody>
-        <Divider/>
+        <Divider />
         <CardFooter>
           <ButtonGroup spacing="2">
             <Button bgColor={"olivaClaro"}
-                    onClick={() => handleOpenModal(producto)}
-            >Consulta</Button>
+                    onClick={() => { handleOpenModal(producto);  }}
+            >Agregar</Button>
 
             <Link to={`/producto/${producto.id}`}>
               <Button bgColor={"dorado"}>Detalles</Button>
@@ -111,6 +111,18 @@ const ProductCard = ({disponible = true, producto}) => {
       </Card>
     </>
   );
+};
+
+// Validación de PropTypes
+ProductCard.propTypes = {
+  disponible: PropTypes.bool,
+  producto: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    unitPrice: PropTypes.number.isRequired,
+    imageUri: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ProductCard;
