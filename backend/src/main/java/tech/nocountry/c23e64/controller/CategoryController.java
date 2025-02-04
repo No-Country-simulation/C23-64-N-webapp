@@ -1,5 +1,6 @@
 package tech.nocountry.c23e64.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +22,14 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
+    // Endpoint para crear una categoría (solo accesible por ADMIN)
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<CategoryDto> addCategory(@RequestBody @Valid CategoryCreateDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(createDto));
     }
 
+    // Endpoint para obtener todas las categorías (accesible por todos los usuarios autenticados)
     @GetMapping
     public ResponseEntity<List<CategoryDto>> getAllCategories() {
         return ResponseEntity.ok(categoryService.getAllCategories());

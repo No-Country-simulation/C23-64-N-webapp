@@ -24,6 +24,9 @@ public class ClientInfoEntity {
 
     private String address;
 
+    @OneToOne(mappedBy = "clientInfo")
+    private UserEntity user;
+
     @OneToMany(mappedBy = "clientInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RentalEntity> rentals;
 

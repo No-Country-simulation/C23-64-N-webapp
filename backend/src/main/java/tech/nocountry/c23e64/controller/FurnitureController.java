@@ -1,5 +1,6 @@
 package tech.nocountry.c23e64.controller;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -25,12 +26,14 @@ public class FurnitureController {
     }
 
     @PostMapping
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<FurnitureDto> addFurniture(@RequestBody @Valid FurnitureCreateDto furniture) {
         FurnitureDto created = furnitureService.createFurniture(furniture);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PatchMapping(path = "/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<FurnitureDto> updateFurniture(@PathVariable Long id, @RequestBody @Valid FurnitureUpdateDto furniture) {
         FurnitureDto updated = furnitureService.updateFurniture(id, furniture);
         return ResponseEntity.ok(updated);
@@ -49,6 +52,7 @@ public class FurnitureController {
     }
 
     @DeleteMapping(path = "/{id}")
+    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<Void> deleteFurniture(@PathVariable Long id) {
         furnitureService.deleteFurniture(id);
         return ResponseEntity.noContent().build();

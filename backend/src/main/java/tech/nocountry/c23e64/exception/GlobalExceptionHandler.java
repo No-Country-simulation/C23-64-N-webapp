@@ -3,13 +3,13 @@ package tech.nocountry.c23e64.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,30 +20,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ProblemDetail handleResourceNotFound(ResourceNotFoundException ex) {
-        return ex.getProblemDetail();
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
     public ProblemDetail handleDuplicateResource(DuplicateResourceException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
-        problemDetail.setType(URI.create("https://httpstatuses.com/409"));
-        problemDetail.setTitle("Conflict");
-
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleValidationExceptions(MethodArgumentNotValidException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setType(URI.create("https://httpstatuses.com/400"));
-        problemDetail.setTitle("Validation Error");
-        problemDetail.setDetail("Uno o más campos contienen valores inválidos");
+        problemDetail.setDetail("Uno o más campos contienen valores inválidos.");
 
         List<Map<String, String>> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(err -> Map.of(
                         "field", err.getField(),
                         "rejectedValue", String.valueOf(err.getRejectedValue()),
-                        "message", Objects.requireNonNullElse(err.getDefaultMessage(), "Error de validación")
+                        "message", Objects.requireNonNullElse(err.getDefaultMessage(), "Error de validación.")
                 ))
                 .collect(Collectors.toList());
 
@@ -53,47 +47,30 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ProblemDetail handleInvalidJson(HttpMessageNotReadableException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setType(URI.create("https://httpstatuses.com/400"));
-        problemDetail.setTitle("Invalid JSON");
-        problemDetail.setDetail("El cuerpo de la petición contiene JSON inválido");
-
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "El cuerpo de la petición contiene JSON inválido.");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ProblemDetail handleIllegalArgument(IllegalArgumentException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
-        problemDetail.setType(URI.create("https://httpstatuses.com/400"));
-        problemDetail.setTitle("Bad Request");
-
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
 
     @ExceptionHandler(NoResourceFoundException.class)
     public ProblemDetail handleNoResourceFound(NoResourceFoundException ex) {
-        ProblemDetail problemDetail = ex.getBody();
-        problemDetail.setType(URI.create("https://httpstatuses.com/404"));
-        return problemDetail;
-    }
-
-    @ExceptionHandler(RuntimeException.class)
-    public ProblemDetail handleRuntimeException(RuntimeException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
-        problemDetail.setType(URI.create("https://httpstatuses.com/500"));
-        problemDetail.setTitle("Internal Server Error");
-        problemDetail.setDetail("Ha ocurrido un error inesperado");
-
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "El recurso solicitado no existe.");
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
-        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problemDetail.setType(URI.create("https://httpstatuses.com/400"));
-        problemDetail.setTitle("Bad Request");
-        problemDetail.setDetail("El valor del parámetro '" + ex.getName() + "' no es válido");
-
-        return problemDetail;
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "El valor del parámetro '" + ex.getName() + "' no es válido.");
     }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ProblemDetail handleRuntimeException(RuntimeException ex) {
+        if (ex instanceof AuthenticationException) {
+            throw ex;
+        }
+        return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Ha ocurrido un error inesperado.");
+    }
+
 }
