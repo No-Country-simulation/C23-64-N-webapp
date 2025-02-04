@@ -6,15 +6,15 @@ import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import tech.nocountry.c23e64.dto.RentalCreateDto;
 import tech.nocountry.c23e64.dto.RentalDto;
 import tech.nocountry.c23e64.mapper.ClientInfoMapper;
 import tech.nocountry.c23e64.mapper.RentalMapper;
-import tech.nocountry.c23e64.model.ClientInfoEntity;
-import tech.nocountry.c23e64.model.FurnitureEntity;
-import tech.nocountry.c23e64.model.RentalDetailEntity;
-import tech.nocountry.c23e64.model.RentalEntity;
+import tech.nocountry.c23e64.model.*;
 import tech.nocountry.c23e64.repository.ClientInfoRepository;
 import tech.nocountry.c23e64.repository.FurnitureRepository;
 import tech.nocountry.c23e64.repository.RentalDetailRepository;
@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class RentalServiceImpl implements RentalService {
 
     private final RentalRepository rentalRepository;
@@ -35,18 +36,9 @@ public class RentalServiceImpl implements RentalService {
     private final ClientInfoMapper clientInfoMapper;
     private final RentalDetailRepository rentalDetailRepository;
 
-    public RentalServiceImpl(RentalRepository rentalRepository, FurnitureRepository furnitureRepository, ClientInfoRepository clientInfoRepository, RentalDetailRepository rentalDetailRepository, RentalMapper rentalMapper, ClientInfoMapper clientInfoMapper) {
-        this.rentalRepository = rentalRepository;
-        this.furnitureRepository = furnitureRepository;
-        this.clientInfoRepository = clientInfoRepository;
-        this.rentalDetailRepository = rentalDetailRepository;
-        this.rentalMapper = rentalMapper;
-        this.clientInfoMapper = clientInfoMapper;
-    }
-
     @Override
     public RentalDto createRental(RentalCreateDto createDto) {
-        ClientInfoEntity clientInfo = clientInfoRepository.save(clientInfoMapper.toEntity(createDto.getClientInfo()));
+        final ClientInfoEntity clientInfo = getClientInfo(createDto);
 
         RentalEntity rental = RentalEntity.builder()
                 .clientInfo(clientInfo)
@@ -76,6 +68,33 @@ public class RentalServiceImpl implements RentalService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         return rentalMapper.toDto(rentalRepository.save(rental));
+    }
+
+    private ClientInfoEntity getClientInfo(RentalCreateDto createDto) {
+        final ClientInfoEntity clientInfo;
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAuthenticated = authentication != null && authentication.isAuthenticated() && !authentication.getPrincipal().equals("anonymousUser");
+
+        if (isAuthenticated) {
+            final UserEntity user = (UserEntity) authentication.getPrincipal();
+            boolean isAdmin = user.getUserRole().equals(UserRole.ROLE_ADMIN);
+
+            if (isAdmin) {
+                if (createDto.getClientInfo() == null) {
+                    throw new IllegalArgumentException("Se debe enviar información del cliente al crear una reserva desde un usuario admin.");
+                }
+                clientInfo = clientInfoRepository.save(clientInfoMapper.toEntity(createDto.getClientInfo()));
+            } else {
+                clientInfo = user.getClientInfo();
+            }
+        } else {
+            if (createDto.getClientInfo() != null) {
+                clientInfo = clientInfoRepository.save(clientInfoMapper.toEntity(createDto.getClientInfo()));
+            } else {
+                throw new IllegalArgumentException("Información del cliente es requerida para reservas sin autenticación.");
+            }
+        }
+        return clientInfo;
     }
 
     @Override

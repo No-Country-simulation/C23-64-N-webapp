@@ -15,7 +15,6 @@ public class RentalCreateDto {
     @NotNull
     private LocalDate rentalDate;
 
-    @NotNull
     private ClientInfoDto clientInfo;
 
 }
