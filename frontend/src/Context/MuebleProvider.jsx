@@ -82,6 +82,7 @@ export const MuebleProvider = ({children}) => {
         updateFurniture,
         reservado,
         setReservado,
+       
       }}
     >
       {children}

@@ -29,7 +29,7 @@ import {AlertDialogComponent} from "../components/AlertDialog/AlertDialog";
 import {useNavigate} from "react-router-dom";
 
 const DetailCart = () => {
-  const {rental, setRental} = useModal();
+  const {rental, setRental,setSelectedDate,selectedDate} = useModal();
   const {setCartCount, cartCount, postAlquiler, reservado} =
     useContext(MuebleContext);
   const [total, setTotal] = useState(0);
@@ -64,6 +64,8 @@ const DetailCart = () => {
 
   const limpiarAlquiler = () => {
     setRental({});
+    setCartCount(0);
+    setSelectedDate(null)
     localStorage.removeItem("rental");
     localStorage.removeItem("fecha");
     localStorage.removeItem("id");
@@ -79,44 +81,42 @@ const DetailCart = () => {
     const alquiler = {
       clientInfo: {...values},
       rentalDetails: rentalDetails,
-      rentalDate: rental.fechaAlquiler.toISOString().split('T')[0],
+      rentalDate: new Date(rental.fechaAlquiler).toISOString().split('T')[0],
     };
 
     postAlquiler(alquiler);
     // Mostrar la alerta
 
-    setAlertMessage(JSON.stringify(alquiler, null, 2));
-    setShowAlert(true);
+    // setAlertMessage(JSON.stringify(alquiler, null, 2));
+    // setShowAlert(true);
 
     setTimeout(() => {
       limpiarAlquiler();
-    }, 15000);
+    }, 5000);
   }
 
   useEffect(() => {
-    const nuevoTotal = muebles.reduce((acc, mueble) => {
-      return acc + mueble.cantidad * mueble.precio;
-    }, 0);
-
+    const nuevoTotal = muebles?.reduce((acc, mueble) => acc + mueble.cantidad * mueble.precio, 0) || 0;
     setTotal(nuevoTotal);
   }, [muebles]);
 
   return (
     <Center flexDir={"column"}>
-      {showAlert && ( // Renderizar la alerta si showAlert es true
+      {/* {showAlert && ( // Renderizar la alerta si showAlert es true
         <AlertDialogComponent
           msj={alertMessage}
           isOpen={showAlert}
           onClose={() => setShowAlert(false)}
         />
-      )}
-      {muebles?.length !== 0 ? (
+      )} */}
+      {selectedDate && muebles?.length !== 0 ? (
         <Stack>
           <TableContainer>
             <Table variant="striped" colorScheme="brown">
               <TableCaption fontSize={"2xl"} color={"red.400"}>
-                Detalle de los muebles alquilados para la fecha:{" "}
-                {rental.fechaAlquiler.toISOString().split('T')[0]}{" "}
+                Detalle de los muebles alquilados para la fecha:
+                {
+                  new Date(selectedDate).toISOString().split('T')[0]}
               </TableCaption>
               <Thead>
                 <Tr>
