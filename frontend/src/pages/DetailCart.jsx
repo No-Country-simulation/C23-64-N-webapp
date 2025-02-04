@@ -313,7 +313,7 @@ const DetailCart = () => {
             </Text>
 
             <img
-              src={`https://c23-64-n-webapp-development.up.railway.app/rentals/${reservado}/qrcode`}
+              src={`${import.meta.env.VITE_API_BASE_URL}/rentals/${reservado}/qrcode`}
             />
             <Text fontSize={'2xl'} color={'green.400'}> Este código también fue enviado a tu casilla
               de correo</Text>

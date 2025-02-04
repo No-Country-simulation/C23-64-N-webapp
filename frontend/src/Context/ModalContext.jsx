@@ -29,7 +29,7 @@ export const ModalProvider = ({ children }) => {
 
   const [rental, setRental] = useState(initialValueRental)
 
-  const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   //para el calendario
   const [selectedDate, setSelectedDate] = useState(null);
