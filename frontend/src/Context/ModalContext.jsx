@@ -84,7 +84,7 @@ export const ModalProvider = ({ children }) => {
         reserveOk,
         setRental,
         rental,
-
+        initialValueRental,
         setCantidad,
         cantidad,
       }}

@@ -89,7 +89,7 @@ const ModalRental = () => {
         <ModalHeader textAlign={"center"} color="olive">
           Consultar Disponibilidad{" "}
         </ModalHeader>
-        <ModalCloseButton />
+        {/* <ModalCloseButton /> */}
         <ModalBody>
           {modalContent && (
             <Box>
