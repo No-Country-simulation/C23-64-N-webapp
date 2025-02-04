@@ -2,7 +2,10 @@ package tech.nocountry.c23e64.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import tech.nocountry.c23e64.model.UserRole;
@@ -16,8 +19,14 @@ import java.util.Map;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private static final String SECRET_KEY = "super-secret-key-super-secret-key-super-secret-key";
-    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    @Value("${jwt.secret}")
+    private String secretKey;
+    private SecretKey key;
+
+    @PostConstruct
+    public void init() {
+        key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+    }
 
     @Override
     public String generateToken(UserDetails userDetails, Map<String, Object> claims) {
