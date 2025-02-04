@@ -29,8 +29,8 @@ import {AlertDialogComponent} from "../components/AlertDialog/AlertDialog";
 import {useNavigate} from "react-router-dom";
 
 const DetailCart = () => {
-  const {rental, setRental,setSelectedDate,selectedDate} = useModal();
-  const {setCartCount, cartCount, postAlquiler, reservado} =
+  const {rental, setRental,setSelectedDate,selectedDate,initialValueRental} = useModal();
+  const {setCartCount, cartCount, postAlquiler, reservado,setReservado} =
     useContext(MuebleContext);
   const [total, setTotal] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
@@ -63,9 +63,10 @@ const DetailCart = () => {
   });
 
   const limpiarAlquiler = () => {
-    setRental({});
+    setRental(initialValueRental);
     setCartCount(0);
     setSelectedDate(null)
+    setReservado(null)
     localStorage.removeItem("rental");
     localStorage.removeItem("fecha");
     localStorage.removeItem("id");
