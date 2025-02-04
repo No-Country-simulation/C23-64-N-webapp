@@ -10,7 +10,7 @@ export const MuebleProvider = ({children}) => {
   const [cartCount, setCartCount] = useState(0);
 
 
-  const baseURL = "https://c23-64-n-webapp-development.up.railway.app";
+  const baseURL = import.meta.env.VITE_API_BASE_URL;
 
   const getFurniture = async () => {
     try {
