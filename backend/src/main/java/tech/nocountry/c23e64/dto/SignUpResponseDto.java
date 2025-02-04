@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SignInResponseDto {
+public class SignUpResponseDto {
 
-    private String token;
+    private String username;
 
-    private String role;
+    private ClientInfoDto clientInfo;
 
 }

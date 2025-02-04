@@ -35,6 +35,9 @@ public class UserEntity implements UserDetails {
     @NotBlank
     private String password;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private ClientInfoEntity clientInfo;
+
     @Enumerated(EnumType.STRING)
     @NotNull
     private UserRole userRole;

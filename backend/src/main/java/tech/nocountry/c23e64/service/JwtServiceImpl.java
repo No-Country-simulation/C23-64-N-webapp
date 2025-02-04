@@ -17,7 +17,7 @@ import java.util.Map;
 public class JwtServiceImpl implements JwtService {
 
     private static final String SECRET_KEY = "super-secret-key-super-secret-key-super-secret-key";
-    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
+    private final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
     @Override
     public String generateToken(UserDetails userDetails, Map<String, Object> claims) {
@@ -25,7 +25,7 @@ public class JwtServiceImpl implements JwtService {
                 .subject(userDetails.getUsername())
                 .claims(claims)
                 .issuedAt(Date.from(Instant.now()))
-                .expiration(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
+                .expiration(Date.from(Instant.now().plus(1, ChronoUnit.HOURS)))
                 .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }

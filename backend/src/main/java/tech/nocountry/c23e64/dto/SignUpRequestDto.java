@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class SignInRequestDto {
+public class SignUpRequestDto {
 
-    @NotNull(message = "El nombre de usuario no puede ser nulo")
-    private String username;
+    @NotNull(message = "La información del cliente no puede ser nula")
+    private ClientInfoDto clientInfo;
 
     @NotNull(message = "La contraseña no puede ser nula")
     private String password;
