@@ -1,6 +1,6 @@
 package tech.nocountry.c23e64.controller;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,7 +12,7 @@ import tech.nocountry.c23e64.dto.SignUpResponseDto;
 import tech.nocountry.c23e64.service.AuthService;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/auth")
 public class AuthController {
 

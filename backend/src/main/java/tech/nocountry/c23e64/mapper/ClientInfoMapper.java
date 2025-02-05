@@ -10,6 +10,7 @@ public interface ClientInfoMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "rentals", ignore = true)
+    @Mapping(target = "user", ignore = true)
     ClientInfoEntity toEntity(ClientInfoDto clientInfoDto);
 
     ClientInfoDto toDto(ClientInfoEntity clientInfoEntity);

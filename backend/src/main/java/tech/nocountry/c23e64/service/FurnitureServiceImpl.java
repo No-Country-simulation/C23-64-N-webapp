@@ -1,7 +1,7 @@
 package tech.nocountry.c23e64.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tech.nocountry.c23e64.dto.FurnitureCreateDto;
 import tech.nocountry.c23e64.dto.FurnitureDto;
@@ -19,20 +19,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class FurnitureServiceImpl implements FurnitureService {
 
     private final FurnitureRepository furnitureRepository;
     private final CategoryRepository categoryRepository;
     private final RentalDetailRepository rentalDetailRepository;
     private final FurnitureMapper furnitureMapper;
-    private final Logger logger = LoggerFactory.getLogger(FurnitureServiceImpl.class);
-
-    public FurnitureServiceImpl(FurnitureRepository furnitureRepository, CategoryRepository categoryRepository, RentalDetailRepository rentalDetailRepository, FurnitureMapper furnitureMapper) {
-        this.furnitureRepository = furnitureRepository;
-        this.categoryRepository = categoryRepository;
-        this.rentalDetailRepository = rentalDetailRepository;
-        this.furnitureMapper = furnitureMapper;
-    }
 
     @Override
     public FurnitureDto createFurniture(FurnitureCreateDto createDto) {
@@ -106,13 +100,13 @@ public class FurnitureServiceImpl implements FurnitureService {
     @Override
     public List<FurnitureDto> getAllFurniture(LocalDate date) {
         if (date == null) {
-            logger.info("Getting all furniture without date");
+            log.info("Getting all furniture without date");
             return furnitureRepository.findAll()
                     .stream()
                     .map(furnitureMapper::toDto).toList();
         }
 
-        logger.info("Getting all furniture with date {}", date);
+        log.info("Getting all furniture with date {}", date);
         return furnitureRepository.findAll().stream()
                 .map(furniture -> {
                     int reservedQuantity = rentalDetailRepository.findTotalReservedByFurnitureAndDate(furniture.getId(), date);
@@ -129,7 +123,7 @@ public class FurnitureServiceImpl implements FurnitureService {
         if (furnitureRepository.existsById(id)) {
             furnitureRepository.deleteById(id);
         } else {
-            throw new ResourceNotFoundException("El mueble con ID " + id + " no existe");
+            throw new IllegalArgumentException("El mueble con ID " + id + " no existe");
         }
     }
 

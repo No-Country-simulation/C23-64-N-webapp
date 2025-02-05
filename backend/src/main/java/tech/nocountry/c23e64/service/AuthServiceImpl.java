@@ -1,6 +1,6 @@
 package tech.nocountry.c23e64.service;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +19,7 @@ import tech.nocountry.c23e64.repository.UserRepository;
 
 import java.util.Map;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Service
 public class AuthServiceImpl implements AuthService {
 
