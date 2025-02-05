@@ -16,4 +16,6 @@ public interface RentalService {
 
     BufferedImage getRentalQrCode(Long id);
 
+    void deleteRental(Long id);
+
 }

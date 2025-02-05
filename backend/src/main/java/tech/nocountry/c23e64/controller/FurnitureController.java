@@ -2,6 +2,7 @@ package tech.nocountry.c23e64.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/furniture")
 public class FurnitureController {
 
     private final FurnitureService furnitureService;
-
-    public FurnitureController(FurnitureService furnitureService) {
-        this.furnitureService = furnitureService;
-    }
 
     @PostMapping
     @SecurityRequirement(name = "Bearer Authentication")
@@ -57,4 +55,5 @@ public class FurnitureController {
         furnitureService.deleteFurniture(id);
         return ResponseEntity.noContent().build();
     }
+
 }

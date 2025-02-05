@@ -2,6 +2,7 @@ package tech.nocountry.c23e64.controller;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,20 +18,23 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*")
 @RequestMapping("/rentals")
 public class RentalController {
 
     private final RentalService rentalService;
 
-    public RentalController(RentalService rentalService) {
-        this.rentalService = rentalService;
-    }
-
     @PostMapping
-    @SecurityRequirement(name = "Bearer Authentication")
     public ResponseEntity<RentalDto> addRental(@RequestBody @Valid RentalCreateDto createDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(rentalService.createRental(createDto));
+    }
+
+    @DeleteMapping
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> deleteRental(@RequestParam Long id) {
+        rentalService.deleteRental(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
