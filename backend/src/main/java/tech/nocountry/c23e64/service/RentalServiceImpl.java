@@ -124,6 +124,15 @@ public class RentalServiceImpl implements RentalService {
         return generateQrImage(qrCodeText, 300, 300);
     }
 
+    @Override
+    public void deleteRental(Long id) {
+        if (rentalRepository.existsById(id)) {
+            rentalRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("El alquiler con ID " + id + " no existe");
+        }
+    }
+
     private BufferedImage generateQrImage(String text, int width, int height) {
         try {
             QRCodeWriter qrCodeWriter = new QRCodeWriter();

@@ -1,5 +1,6 @@
 package tech.nocountry.c23e64.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tech.nocountry.c23e64.dto.CategoryCreateDto;
 import tech.nocountry.c23e64.dto.CategoryDto;
@@ -11,15 +12,11 @@ import tech.nocountry.c23e64.repository.CategoryRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-
-    public CategoryServiceImpl(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
-        this.categoryRepository = categoryRepository;
-        this.categoryMapper = categoryMapper;
-    }
 
     @Override
     public CategoryDto createCategory(CategoryCreateDto createDto) {
@@ -44,5 +41,15 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(categoryMapper::toDto)
                 .orElseThrow(() -> new IllegalArgumentException("La categoría con ID " + id + " no existe."));
     }
+
+    @Override
+    public void deleteCategory(Long id) {
+        if (categoryRepository.existsById(id)) {
+            categoryRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("La categoría con ID " + id + " no existe.");
+        }
+    }
+
 }
 
