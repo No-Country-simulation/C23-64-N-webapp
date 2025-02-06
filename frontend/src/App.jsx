@@ -14,7 +14,7 @@ import { Box } from "@chakra-ui/react";
 import AdminLogin from "./pages/AdminLogin";
 import DetailCart from "./pages/DetailCart";
 import AdminPanel from "./pages/AdminPanel";
-
+import Layout from "./layout/Layout.jsx";
 
 
 function App() {
@@ -22,22 +22,20 @@ function App() {
     <BrowserRouter>
       <MuebleProvider>
         <ModalProvider>
-          <Header />
-            <Box minH={"60vh"}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/contacto" element={<Contacto />} />
-                <Route path="/productos" element={<Products />} />
-                <Route path="/producto/:id" element={<Product />} />
-                <Route path="/carrito" element={<DetailCart/>} />
-                
-                <Route path="/category/:id" element={<Category />} />
-                <Route path="/adminlogin" element={<AdminLogin />} />
-                <Route path="/adminpanel" element={<AdminPanel/>} />
-              </Routes>
-            </Box>
-          <Footer />
-          <ModalRental />
+          <Box minH={"60vh"}>
+            <Routes>
+              <Route path="/" element={<Layout page={<Home/>}/>}/>
+              <Route path="/contacto" element={<Layout page={<Contacto/>}/>}/>
+              <Route path="/productos" element={<Layout page={<Products/>}/>}/>
+              <Route path="/producto/:id" element={<Layout page={<Product/>}/>}/>
+              <Route path="/carrito" element={<Layout page={<DetailCart/>}/>}/>
+              <Route path="/category/:id" element={<Layout page={<Category/>}/>}/>
+
+              <Route path="/adminlogin" element={<AdminLogin/>}/>
+              <Route path="/adminpanel" element={<AdminPanel/>}/>
+            </Routes>
+          </Box>
+          <ModalRental/>
         </ModalProvider>
       </MuebleProvider>
     </BrowserRouter>
