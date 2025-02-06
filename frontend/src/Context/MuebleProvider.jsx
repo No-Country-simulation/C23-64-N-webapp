@@ -1,14 +1,20 @@
-import {useEffect, useState} from "react";
-import {MuebleContext} from "./MuebleContext";
+import { useEffect, useState } from "react";
+import { MuebleContext } from "./MuebleContext";
 import axios from "axios";
+import { MdCloudQueue } from "react-icons/md";
 
-export const MuebleProvider = ({children}) => {
+export const MuebleProvider = ({ children }) => {
+  const initialAuthState = {
+    token: null,
+    rol: "ROLE_USER",
+    isAuthenticated: false,
+  };
+
   const [furniture, setFurniture] = useState([]);
-  const [reservado, setReservado] = useState(null)
+  const [reservado, setReservado] = useState(null);
   const [category, setCategory] = useState([]);
-  const [rol, setRol] = useState({rol: "user"});
+  const [auth, setAuth] = useState(initialAuthState);
   const [cartCount, setCartCount] = useState(0);
-
 
   const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -30,16 +36,32 @@ export const MuebleProvider = ({children}) => {
   };
   //actualizar furniture
   const updateFurniture = async (furniture) => {
+    const storedData = localStorage.getItem("authData");
+    const { token} = JSON.parse(storedData);
     try {
-      await axios.patch(`${baseURL}/furniture`, furniture);
+      await axios.patch(`${baseURL}/furniture/${furniture.id}`, furniture, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      getFurniture();
     } catch (error) {
       console.error("Error Post furniture:", error);
     }
   };
   //agregar furniture
   const postFurniture = async (furniture) => {
+    const storedData = localStorage.getItem("authData");
+    const { token} = JSON.parse(storedData);
     try {
-      await axios.post(`${baseURL}/furniture`, furniture);
+      await axios.post(`${baseURL}/furniture`, furniture,{
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+      getFurniture();
     } catch (error) {
       console.error("Error Post furniture:", error);
     }
@@ -47,15 +69,38 @@ export const MuebleProvider = ({children}) => {
   //registrar alquiler
   const postAlquiler = async (alquiler) => {
     try {
-      await axios.post(`${baseURL}/rentals`, alquiler)
-        .then((response) => {
-          setReservado(response.data.id)
-        })
+      await axios.post(`${baseURL}/rentals`, alquiler).then((response) => {
+        setReservado(response.data.id);
+      });
     } catch (error) {
       console.error("Error fetching category:", error);
     }
   };
+  //authorization
 
+  const getAuthorization = async (value) => {
+    try {
+      const response = await axios.post(`${baseURL}/auth/signin`, value);
+      const { token, rol } = response.data;
+
+      // Actualizamos el estado con los datos de autenticación
+      setAuth({
+        token,
+        rol,
+        isAuthenticated: true,
+      });
+      localStorage.setItem("authData", JSON.stringify({ token, rol }));
+    } catch (error) {
+      console.log("Error completo:", error);
+
+      throw error;
+    }
+  };
+  // Función para cerrar sesión
+  const logout = () => {
+    setAuth(initialAuthState);
+    localStorage.removeItem("authData");
+  };
 
   useEffect(() => {
     getFurniture();
@@ -74,7 +119,7 @@ export const MuebleProvider = ({children}) => {
         category,
         getFurniture,
         getCategory,
-        rol,
+
         cartCount,
         setCartCount,
         postAlquiler,
@@ -82,7 +127,10 @@ export const MuebleProvider = ({children}) => {
         updateFurniture,
         reservado,
         setReservado,
-       
+        getAuthorization,
+        auth,
+        setAuth,
+        logout,
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -13,6 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
+import { MuebleContext } from "../Context/MuebleContext";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -24,16 +25,24 @@ const AdminLogin = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-
+  const { auth, rol , getAuthorization} = useContext(MuebleContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const {isAuthenticated}=auth
   // Credenciales hardcodeadas
-  const ADMIN_EMAIL = "admin@example.com";
-  const ADMIN_PASSWORD = "admin123";
+ 
 
-  const handleLogin = () => {
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      navigate("/admin-panel"); // Redirige al panel de administración
-    } else {
-      setError("Correo o contraseña incorrectos");
+  const handleLogin =(e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    // Verificar credenciales
+    try{
+
+      getAuthorization({"username":email ,"password": password})
+      
+    }catch(error){
+      console.log("Error en el login",error)
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,7 +55,11 @@ const AdminLogin = () => {
       setError("Ingrese un correo válido");
     }
   };
-
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/adminpanel");
+    }
+  }, [isAuthenticated, navigate]);
   return (
     <Flex h="100vh" alignItems="center" justifyContent="center" bg="gray.50">
       <Box bg="white" p={8} rounded="lg" shadow="lg" maxW="400px" w="100%">
@@ -93,8 +106,8 @@ const AdminLogin = () => {
                 />
               </FormControl>
 
-              <Button colorScheme="teal" onClick={handleLogin} w="100%" mt={4}>
-                Ingresar
+              <Button onClick={handleLogin} disabled={isLoading} w="100%" mt={4}>
+              {isLoading ? 'Cargando...' : 'Iniciar Sesión'}
               </Button>
 
               <Flex justify="center" mt={2}>

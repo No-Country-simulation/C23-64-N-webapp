@@ -7,11 +7,11 @@ import CartIcon from "../CartIcon/CartIcon";
 import { MuebleContext } from "../../Context/MuebleContext";
 
 const Header = () => {
-  const { rol } = useContext(MuebleContext);
+  const {rol } = useContext(MuebleContext);
  
   return (
     <>
-      {rol.rol !== "admin" && (
+      {rol === "ROLE_USER" && (
         <Center
           bg="brown.100"
           justifyContent={"space-between"}

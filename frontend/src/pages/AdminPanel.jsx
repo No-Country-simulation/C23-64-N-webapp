@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   Box,
   Button,
@@ -12,28 +12,34 @@ import {
   Th,
   Td,
   useDisclosure,
+  useSafeLayoutEffect,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { MuebleContext } from "../Context/MuebleContext";
 import ModalProducts from "../components/Modal/ModalProducts";
 import ModalReservations from "../components/Modal/ModalReservations";
 import ModalEditProduct from "../components/Modal/ModalEditProduct"; // Nuevo modal para editar productos
+import { Navigate, useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
   const [activeSection, setActiveSection] = useState("productos");
-  const { furniture, setFurniture } = useContext(MuebleContext);
-
+  const { furniture, logout,updateFurniture,postFurniture,setAuth, auth } = useContext(MuebleContext);
+  
   // Estados para modales
   const { isOpen: isProductOpen, onOpen: onProductOpen, onClose: onProductClose } = useDisclosure();
   const { isOpen: isReservationOpen, onOpen: onReservationOpen, onClose: onReservationClose } = useDisclosure();
   const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
 
+  const navigate = useNavigate();
+  
   // Estado para almacenar el producto a editar
   const [selectedProduct, setSelectedProduct] = useState(null);
 
   // Simulación de agregar producto (luego se conectará al backend)
   const addProduct = (product) => {
-    setFurniture([...furniture, { ...product, id: furniture.length + 1 }]);
+    console.log(product)
+      postFurniture(product)
+    // setFurniture([...furniture, { ...product, id: furniture.length + 1 }]);
   };
 
   // Simulación de agregar reserva (luego se conectará al backend)
@@ -43,16 +49,30 @@ const AdminPanel = () => {
 
   // Función para editar un producto
   const handleEditClick = (product) => {
+    console.log(product)
     setSelectedProduct(product);
     onEditOpen();
   };
 
   // Función para actualizar un producto en la lista
   const updateProduct = (updatedProduct) => {
-    setFurniture(furniture.map((item) => (item.id === updatedProduct.id ? updatedProduct : item)));
+    console.log(updatedProduct)
+    updateFurniture(updatedProduct)
+    // setFurniture(furniture.map((item) => (item.id === updatedProduct.id ? updatedProduct : item)));
   };
 
+  const setLogout=()=>{
+    logout();
+    navigate('/')
+  }
+useEffect(()=>{
+  if(localStorage.getItem('token')){
+    console.log("entra")
+      setAuth({...auth, isAuthenticated: true})
+}
+},[])
   return (
+      <VStack h={"100vh"} justifyContent={"center"} mb={5}>
     <Flex>
       {/* MENÚ LATERAL */}
       <Box w="250px" p={5} bg="gray.800" color="white">
@@ -63,6 +83,9 @@ const AdminPanel = () => {
           </Button>
           <Button variant="link" colorScheme="teal" onClick={() => setActiveSection("reservas")}>
             Reservas
+          </Button>
+          <Button variant="link" colorScheme="red" onClick={() => setLogout()}>
+            Logout
           </Button>
         </VStack>
       </Box>
@@ -90,6 +113,7 @@ const AdminPanel = () => {
               <Tr>
                 <Th>ID</Th>
                 <Th>Nombre</Th>
+                <Th>Categoria</Th>
                 <Th>Stock</Th>
                 <Th>Precio Unitario</Th>
                 <Th>Descripción</Th>
@@ -101,6 +125,7 @@ const AdminPanel = () => {
                 <Tr key={item.id}>
                   <Td>{item.id}</Td>
                   <Td>{item.name}</Td>
+                  <Td>{item.category}</Td>
                   <Td>{item.stock}</Td>
                   <Td>${item.unitPrice}</Td>
                   <Td>{item.description}</Td>
@@ -150,6 +175,7 @@ const AdminPanel = () => {
       {/* MODAL PARA EDITAR PRODUCTO */}
       <ModalEditProduct isOpen={isEditOpen} onClose={onEditClose} product={selectedProduct} updateProduct={updateProduct} />
     </Flex>
+    </VStack>
   );
 };
 
