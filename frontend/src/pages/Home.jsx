@@ -16,7 +16,7 @@ const Home = () => {
   ];
 
   return (
-    <VStack minH="100vh" justifyContent={"center"} mb={5}>
+    <VStack flexGrow={1} justifyContent={"start"} mb={5}>
       <Carousel images={img}/>
       <Heading as="h1" size='2xl'>CATEGORIAS</Heading>
       <HStack wrap={'wrap'} justifyContent={"center"} spacing={4}>
