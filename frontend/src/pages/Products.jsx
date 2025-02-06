@@ -1,15 +1,13 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { MuebleContext } from "../Context/MuebleContext";
-import { Heading, HStack, useModal, useModalContext, VStack } from "@chakra-ui/react";
-import Cards from "../components/Card/Cards";
+import { HStack, VStack } from "@chakra-ui/react";
 import ProductCard from "../components/Card/ProductCard";
 
 const Products = () => {
-  const { furniture } = useContext(MuebleContext);
- 
+  const {furniture} = useContext(MuebleContext);
+
   return (
-    <VStack h={"100%"} justifyContent={"center"} m={5}>
-      
+    <VStack justifyContent={"center"} m={5} flexGrow={1}>
       <HStack wrap={"wrap"} justifyContent={"center"} spacing={4}>
         {furniture.map((item) => (
           <ProductCard
@@ -17,7 +15,6 @@ const Products = () => {
             producto={item}
           />
         ))}
-        
       </HStack>
     </VStack>
   );

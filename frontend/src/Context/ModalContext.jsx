@@ -1,14 +1,15 @@
 import axios from "axios";
-import React, {createContext, useContext, useEffect, useState} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 // Crear el contexto del modal
 const ModalContext = createContext();
 
 // Proveedor del contexto del modal
-export const ModalProvider = ({ children }) => {
+export const ModalProvider = ({children}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalContent, setModalContent] = useState({});
-  const [onConfirm, setOnConfirm] = useState(() => () => { });
+  const [onConfirm, setOnConfirm] = useState(() => () => {
+  });
   const [reserveOk, setReserveOk] = useState(false);
   const [cantidad, setCantidad] = useState(0);
 
@@ -36,13 +37,12 @@ export const ModalProvider = ({ children }) => {
 
   const getDayFree = async (id, fecha) => {
     try {
-        let response = await axios.get(`${baseURL}/furniture/${id}?date=${new Date(fecha).toISOString().split('T')[0]}`);
-         setCantidad(response.data.stock)
-      
+      let response = await axios.get(`${baseURL}/furniture/${id}?date=${new Date(fecha).toISOString().split('T')[0]}`);
+      setCantidad(response.data.stock)
+
     } catch (error) {
       console.error("Error posible falla de fecha:", error);
     }
-  
 
 
   }
@@ -64,11 +64,12 @@ export const ModalProvider = ({ children }) => {
     setIsOpen(false);
     setCantidad(0);
     setModalContent(null);
-    setOnConfirm(() => () => { });
+    setOnConfirm(() => () => {
+    });
   };
   useEffect(() => {
     localStorage.setItem('rental', JSON.stringify(rental))
- 
+
   }, [rental])
   return (
     <ModalContext.Provider

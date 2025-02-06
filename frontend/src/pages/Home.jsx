@@ -1,8 +1,8 @@
-import {Button, Center, Container, Heading, HStack, Image, Text, VStack} from "@chakra-ui/react";
-import React, {useContext} from "react";
+import { Heading, HStack, VStack } from "@chakra-ui/react";
+import { useContext } from "react";
 
 import Carousel from "../components/Carrusel/Carousel";
-import {MuebleContext} from "../Context/MuebleContext";
+import { MuebleContext } from "../Context/MuebleContext";
 import CategoryCard from "../components/Card/CategoryCard";
 
 
@@ -16,7 +16,7 @@ const Home = () => {
   ];
 
   return (
-    <VStack h={"100%"} justifyContent={"center"} mb={5}>
+    <VStack minH="100vh" justifyContent={"center"} mb={5}>
       <Carousel images={img}/>
       <Heading as="h1" size='2xl'>CATEGORIAS</Heading>
       <HStack wrap={'wrap'} justifyContent={"center"} spacing={4}>
