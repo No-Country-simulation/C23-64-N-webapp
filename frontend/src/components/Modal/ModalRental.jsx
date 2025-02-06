@@ -54,6 +54,7 @@ const ModalRental = () => {
 
   const handleClose = () => {
     setSelectedDate(null);
+    setInput("");
     closeModal();
   };
 
@@ -79,6 +80,7 @@ const ModalRental = () => {
      
     }
 
+    setInput("");
     closeModal(); // Cierra el modal
   };
 
