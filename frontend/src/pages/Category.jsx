@@ -1,5 +1,5 @@
 import { VStack, HStack } from "@chakra-ui/react";
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { MuebleContext } from "../Context/MuebleContext";
 import ProductCard from "../components/Card/ProductCard";
@@ -17,7 +17,7 @@ export const Category = () => {
 //  console.log("Filtered products:", filteredProducts);
 
   return (
-    <VStack minH={"80vh"} justifyContent={"center"} m={5}>
+    <VStack justifyContent={"start"} m={5} flexGrow={1}>
       <HStack wrap={"wrap"} justifyContent={"center"} spacing={4}>
         {filteredProducts.length > 0 ? (
           filteredProducts.map((item) => (

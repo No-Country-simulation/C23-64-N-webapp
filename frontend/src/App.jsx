@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Home from "./pages/Home";
 import { Footer } from "./components/Footer/Footer";
@@ -14,23 +14,30 @@ import { Box } from "@chakra-ui/react";
 import AdminLogin from "./pages/AdminLogin";
 import DetailCart from "./pages/DetailCart";
 import AdminPanel from "./pages/AdminPanel";
-import Layout from "./layout/Layout.jsx";
 
+const MainLayout = () => (
+  <>
+    <Header/>
+    <Outlet/>
+    <Footer/>
+  </>
+)
 
 function App() {
   return (
     <BrowserRouter>
       <MuebleProvider>
         <ModalProvider>
-          <Box minH={"60vh"}>
+          <Box minH="100vh" display="flex" flexDirection="column">
             <Routes>
-              <Route path="/" element={<Layout page={<Home/>}/>}/>
-              <Route path="/contacto" element={<Layout page={<Contacto/>}/>}/>
-              <Route path="/productos" element={<Layout page={<Products/>}/>}/>
-              <Route path="/producto/:id" element={<Layout page={<Product/>}/>}/>
-              <Route path="/carrito" element={<Layout page={<DetailCart/>}/>}/>
-              <Route path="/category/:id" element={<Layout page={<Category/>}/>}/>
-
+              <Route element={<MainLayout/>}>
+                <Route path="/" element={<Home/>}/>
+                <Route path="/contacto" element={<Contacto/>}/>
+                <Route path="/productos" element={<Products/>}/>
+                <Route path="/producto/:id" element={<Product/>}/>
+                <Route path="/carrito" element={<DetailCart/>}/>
+                <Route path="/category/:id" element={<Category/>}/>
+              </Route>
               <Route path="/adminlogin" element={<AdminLogin/>}/>
               <Route path="/adminpanel" element={<AdminPanel/>}/>
             </Routes>

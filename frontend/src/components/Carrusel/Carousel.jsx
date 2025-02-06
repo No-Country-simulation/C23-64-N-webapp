@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Box,
   IconButton,
@@ -38,7 +38,6 @@ const Carousel = ({ images = [], autoplaySpeed = 3000 }) => {
       {/* Image Container */}
       <Box 
         overflow="hidden" 
-        borderRadius="lg"
         position="relative"
       >
         <Image

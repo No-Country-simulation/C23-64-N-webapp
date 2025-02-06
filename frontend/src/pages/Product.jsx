@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { MuebleContext } from "../Context/MuebleContext";
 import { Box, Center, Flex } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
@@ -13,7 +13,7 @@ const Product = () => {
   const product = furniture.find((item) => item.id === Number(id));
 
   return (
-    <Center m={1} h={'82vh'}>
+    <Center flexGrow={1}>
       <Box  
       borderRadius={15}
       boxShadow={"15px 15px 10px #8E6E53"}

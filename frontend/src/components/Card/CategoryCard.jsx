@@ -1,18 +1,7 @@
-import {
-  Box,
-  Card,
-  CardBody,
-  Divider,
-  Flex,
-  Heading,
-  Image,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
-import React from "react";
+import { Box, Card, CardBody, Flex, Heading, Stack, Text, } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-const CategoryCard = ({ id, img, title, disponible = true }) => {
+const CategoryCard = ({id, img, title, disponible = true}) => {
   return (
     //url /category/id seria el endpoint para filtrar los productos de esa categoria
     <Link to={`/category/${id}`}>

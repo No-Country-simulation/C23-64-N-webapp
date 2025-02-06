@@ -1,4 +1,4 @@
-import {useForm} from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
   Button,
   Center,
@@ -21,16 +21,16 @@ import {
   Tr,
   VStack,
 } from "@chakra-ui/react";
-import {useContext, useEffect, useState} from "react";
-import {MuebleContext} from "../Context/MuebleContext";
-import {useModal} from "../Context/ModalContext";
-import {DeleteIcon} from "@chakra-ui/icons";
-import {AlertDialogComponent} from "../components/AlertDialog/AlertDialog";
-import {useNavigate} from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { MuebleContext } from "../Context/MuebleContext";
+import { useModal } from "../Context/ModalContext";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { dateFormat, formatPrice } from "../assets/utils.js";
 
 const DetailCart = () => {
-  const {rental, setRental,setSelectedDate,selectedDate,initialValueRental} = useModal();
-  const {setCartCount, cartCount, postAlquiler, reservado,setReservado} =
+  const {rental, setRental, setSelectedDate, selectedDate, initialValueRental} = useModal();
+  const {setCartCount, cartCount, postAlquiler, reservado, setReservado} =
     useContext(MuebleContext);
   const [total, setTotal] = useState(0);
   const [showAlert, setShowAlert] = useState(false); // Estado para controlar la alerta
@@ -52,12 +52,12 @@ const DetailCart = () => {
     formState: {errors, isSubmitting},
   } = useForm({
     defaultValues: {
-      firstName: "Omar Dario",
-      lastName: "Virili",
-      dni: "35256328",
+      firstName: "",
+      lastName: "",
+      dni: "",
       // phone: "3698521475",
-      email: "pedro@algo.com.ar",
-      address: "Algun lado",
+      email: "",
+      address: "",
       // registro: false,
     },
   });
@@ -102,7 +102,7 @@ const DetailCart = () => {
   }, [muebles]);
 
   return (
-    <Center flexDir={"column"}>
+    <Center flexDir="column" flexGrow={1} justifyContent="flex-start" mt={4}>
       {/* {showAlert && ( // Renderizar la alerta si showAlert es true
         <AlertDialogComponent
           msj={alertMessage}
@@ -115,9 +115,7 @@ const DetailCart = () => {
           <TableContainer>
             <Table variant="striped" colorScheme="brown">
               <TableCaption fontSize={"2xl"} color={"red.400"}>
-                Detalle de los muebles alquilados para la fecha:
-                {
-                  new Date(selectedDate).toISOString().split('T')[0]}
+                Detalle de los muebles alquilados para la fecha: {dateFormat.format(new Date(selectedDate))}
               </TableCaption>
               <Thead>
                 <Tr>
@@ -135,8 +133,8 @@ const DetailCart = () => {
                     <Td>{item.id}</Td>
                     <Td>{item.cantidad}</Td>
                     <Td>{item.detalle}</Td>
-                    <Td isNumeric>{item.precio}</Td>
-                    <Td isNumeric>{item.precio * item.cantidad}</Td>
+                    <Td isNumeric>{formatPrice(item.precio)}</Td>
+                    <Td isNumeric>{formatPrice(item.precio * item.cantidad)}</Td>
                     <Td textAlign={"center"}>
                       <DeleteIcon
                         cursor={"pointer"}
@@ -152,14 +150,14 @@ const DetailCart = () => {
                     TOTAL PARA ABONAR:{" "}
                   </Th>
                   <Th isNumeric fontSize={"2xl"}>
-                    $ {total}
+                    {formatPrice(total)}
                   </Th>
                 </Tr>
               </Tfoot>
             </Table>
           </TableContainer>
           <Flex my={5}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} style={{textAlign: "center"}}>
               <HStack spacing={5} my={"15px"}>
                 <FormControl isInvalid={errors.firstName}>
                   <FormLabel htmlFor="firstName">Nombre</FormLabel>
