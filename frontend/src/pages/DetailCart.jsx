@@ -37,6 +37,7 @@ const DetailCart = () => {
   const [alertMessage, setAlertMessage] = useState(""); // Estado para el mensaje de la alerta
   const muebles = rental.muebles;
   const navigate = useNavigate();
+  const [submitDisabled, setSubmitDisabled] = useState(false);
 
   const eliminarProducto = (id) => {
     const pro = muebles.find((item) => item.id === id);
@@ -84,6 +85,7 @@ const DetailCart = () => {
       rentalDetails: rentalDetails,
       rentalDate: new Date(rental.fechaAlquiler).toISOString().split('T')[0],
     };
+    setSubmitDisabled(true);
 
     postAlquiler(alquiler);
     // Mostrar la alerta
@@ -91,9 +93,9 @@ const DetailCart = () => {
     // setAlertMessage(JSON.stringify(alquiler, null, 2));
     // setShowAlert(true);
 
-    setTimeout(() => {
-      limpiarAlquiler();
-    }, 5000);
+    // setTimeout(() => {
+    //   limpiarAlquiler();
+    // }, 5000);
   }
 
   useEffect(() => {
@@ -156,7 +158,7 @@ const DetailCart = () => {
               </Tfoot>
             </Table>
           </TableContainer>
-          <Flex my={5}>
+          <Flex my={5} justifyContent="center">
             <form onSubmit={handleSubmit(onSubmit)} style={{textAlign: "center"}}>
               <HStack spacing={5} my={"15px"}>
                 <FormControl isInvalid={errors.firstName}>
@@ -290,6 +292,7 @@ const DetailCart = () => {
                 colorScheme="teal"
                 isLoading={isSubmitting}
                 type="submit"
+                isDisabled={submitDisabled}
               >
                 Confirmar Alquiler
               </Button>
@@ -303,7 +306,7 @@ const DetailCart = () => {
       )}
       <Center>
         {reservado && (
-          <VStack mx={'25px'}>
+          <VStack mx={'25px'} alignItems="center">
             <Text fontSize={'3xl'} textAlign={'center'} color={'olivaClaro'}>
               Tu reserva ha sido confirmada, se ha enviado un correo electrónico
               con los datos correspondientes. El día del alquiler, presentate
@@ -315,6 +318,7 @@ const DetailCart = () => {
             />
             <Text fontSize={'2xl'} color={'green.400'}> Este código también fue enviado a tu casilla
               de correo</Text>
+            <Button onClick={limpiarAlquiler} colorScheme={'red'} mb={4}>Volver al inicio</Button>
           </VStack>
         )}
       </Center>
