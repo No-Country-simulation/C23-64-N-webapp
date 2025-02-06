@@ -13,6 +13,7 @@ import {
   Td,
   useDisclosure,
   useSafeLayoutEffect,
+  Text,
 } from "@chakra-ui/react";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { MuebleContext } from "../Context/MuebleContext";
@@ -23,7 +24,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 
 const AdminPanel = () => {
   const [activeSection, setActiveSection] = useState("productos");
-  const { furniture, logout,updateFurniture,postFurniture,setAuth, auth } = useContext(MuebleContext);
+  const { furniture, logout,updateFurniture,postFurniture,setAuth, auth, rentals,getRental } = useContext(MuebleContext);
   
   // Estados para modales
   const { isOpen: isProductOpen, onOpen: onProductOpen, onClose: onProductClose } = useDisclosure();
@@ -37,10 +38,8 @@ const AdminPanel = () => {
 
   // Simulación de agregar producto (luego se conectará al backend)
   const addProduct = (product) => {
-    console.log(product)
-      postFurniture(product)
-    // setFurniture([...furniture, { ...product, id: furniture.length + 1 }]);
-  };
+         postFurniture(product)
+      };
 
   // Simulación de agregar reserva (luego se conectará al backend)
   const addReservation = (reservation) => {
@@ -56,16 +55,21 @@ const AdminPanel = () => {
 
   // Función para actualizar un producto en la lista
   const updateProduct = (updatedProduct) => {
-    console.log(updatedProduct)
     updateFurniture(updatedProduct)
     // setFurniture(furniture.map((item) => (item.id === updatedProduct.id ? updatedProduct : item)));
   };
+  //Funcion para listar todas las reservas
+  const listReservations = () => {
+    getRental();
+    console.log(rentals)
 
+  }
   const setLogout=()=>{
     logout();
     navigate('/')
   }
 useEffect(()=>{
+  getRental()
   if(localStorage.getItem('token')){
     console.log("entra")
       setAuth({...auth, isAuthenticated: true})
@@ -73,7 +77,7 @@ useEffect(()=>{
 },[])
   return (
       <VStack h={"100vh"} justifyContent={"center"} mb={5}>
-    <Flex>
+    <Flex w='100%'>
       {/* MENÚ LATERAL */}
       <Box w="250px" p={5} bg="gray.800" color="white">
         <Heading size="md" mb={5}>Panel de Administración</Heading>
@@ -150,15 +154,12 @@ useEffect(()=>{
               </Tr>
             </Thead>
             <Tbody>
-              {[
-                { id: 1, cliente: "Juan Pérez", fecha: "2025-01-20", total: "$150.00" },
-                { id: 2, cliente: "Ana Gómez", fecha: "2025-01-22", total: "$200.00" }
-              ].map((reserva) => (
+              {rentals.map((reserva) => (
                 <Tr key={reserva.id}>
                   <Td>{reserva.id}</Td>
-                  <Td>{reserva.cliente}</Td>
-                  <Td>{reserva.fecha}</Td>
-                  <Td>{reserva.total}</Td>
+                  <Td>{`${reserva.clientInfo.firstName} ${reserva.clientInfo.lastName}` }</Td>
+                  <Td>{reserva.rentalDate}</Td>
+                  <Td textAlign={'right'} ><Text as='span' mx='2px'>$</Text>{new Intl.NumberFormat('es-AR', {minimumFractionDigits: 2}).format(reserva.total)}</Td>
                 </Tr>
               ))}
             </Tbody>

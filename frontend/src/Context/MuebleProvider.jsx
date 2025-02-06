@@ -9,7 +9,7 @@ export const MuebleProvider = ({ children }) => {
     rol: "ROLE_USER",
     isAuthenticated: false,
   };
-
+  const [rentals, setRentals]=useState([])
   const [furniture, setFurniture] = useState([]);
   const [reservado, setReservado] = useState(null);
   const [category, setCategory] = useState([]);
@@ -76,6 +76,15 @@ export const MuebleProvider = ({ children }) => {
       console.error("Error fetching category:", error);
     }
   };
+
+  const getRental=async ()=>{
+    try{
+      const response=await axios.get(`${baseURL}/rentals`)
+      setRentals(response.data)
+    }catch(error){
+      console.log("Error al leer datos de rental",error)
+    }
+  }
   //authorization
 
   const getAuthorization = async (value) => {
@@ -131,6 +140,8 @@ export const MuebleProvider = ({ children }) => {
         auth,
         setAuth,
         logout,
+        getRental,
+        rentals
       }}
     >
       {children}
