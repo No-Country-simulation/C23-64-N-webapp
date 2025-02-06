@@ -30,7 +30,7 @@ public class RentalEmailServiceImpl implements RentalEmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
             helper.setFrom(from);
             helper.setTo(to);
-            helper.setSubject("Confirmación de Reserva");
+            helper.setSubject("Confirmación de Reserva #" + rental.getId());
             helper.addInline("embeddedImage", qrCode, "image/" + "png");
 
             String formattedDate = rental.getRentalDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
