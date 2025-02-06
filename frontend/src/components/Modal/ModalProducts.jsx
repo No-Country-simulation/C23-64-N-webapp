@@ -17,6 +17,7 @@ const ModalProducts = ({ isOpen, onClose, addProduct }) => {
   const [newProduct, setNewProduct] = useState({
     name: "",
     stock: "",
+    categoryName:"",
     unitPrice: "",
     description: "",
   });
@@ -32,7 +33,7 @@ const ModalProducts = ({ isOpen, onClose, addProduct }) => {
   // Enviar datos y cerrar modal
   const handleSubmit = () => {
     addProduct(newProduct);
-    setNewProduct({ name: "", stock: "", unitPrice: "", description: "" }); // Resetear campos
+    setNewProduct({ name: "", stock: "", unitPrice: "", categoryName:"",description: "" }); // Resetear campos
     onClose();
   };
 
@@ -48,6 +49,10 @@ const ModalProducts = ({ isOpen, onClose, addProduct }) => {
             <Input name="name" value={newProduct.name} onChange={handleChange} />
           </FormControl>
           <FormControl mb={3}>
+            <FormLabel>Categoria</FormLabel>
+            <Input name="categoryName" value={newProduct.categoryName} onChange={handleChange} />
+          </FormControl>
+          <FormControl mb={3}>
             <FormLabel>Stock</FormLabel>
             <Input type="number" name="stock" value={newProduct.stock} onChange={handleChange} />
           </FormControl>
@@ -57,7 +62,7 @@ const ModalProducts = ({ isOpen, onClose, addProduct }) => {
           </FormControl>
           <FormControl mb={3}>
             <FormLabel>Imagen</FormLabel>
-            <Input name="imagen" value={newProduct.img} onChange={handleChange} />
+            <Input name="imageUri" value={newProduct.imageUri} onChange={handleChange} />
           </FormControl>
           <FormControl mb={3}>
             <FormLabel>Descripción</FormLabel>

@@ -28,7 +28,15 @@ const ModalEditProduct = ({ isOpen, onClose, product, updateProduct }) => {
   };
 
   const handleSubmit = () => {
-    updateProduct(editedProduct);
+    const nuevosDatos = {
+      ...editedProduct,
+      categoryName: editedProduct.category
+    };
+    delete nuevosDatos.category;
+   
+    // console.log("Nuevos datos para mandar",nuevosDatos)
+    setEditedProduct(nuevosDatos)
+    updateProduct(nuevosDatos);
     onClose();
   };
 
@@ -49,6 +57,10 @@ const ModalEditProduct = ({ isOpen, onClose, product, updateProduct }) => {
           <FormControl mb={3}>
             <FormLabel>Stock</FormLabel>
             <Input type="number" name="stock" value={editedProduct.stock} onChange={handleChange} />
+          </FormControl>
+          <FormControl mb={3}>
+            <FormLabel>Categoria</FormLabel>
+            <Input type="text" name="categoryName" value={editedProduct.category} onChange={handleChange} />
           </FormControl>
 
           <FormControl mb={3}>
