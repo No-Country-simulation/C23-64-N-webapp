@@ -45,14 +45,14 @@ const Contacto = () => {
 
   return (
     <Box maxW="1200px" mx="auto" p={8}>
-      <Heading as="h1" size="xl" mb={10} textAlign="center" color="blue.600">
+      <Heading as="h1" size="xl" mb={10} textAlign="center" color="#7F5539">
         ¿Necesitas ayuda? Contáctanos
       </Heading>
 
       <Grid templateColumns={{ base: "1fr", md: "1fr 1fr" }} gap={10} mb={20}>
         {/* Columna Izquierda - Información */}
         <GridItem>
-          <Box bg="blue.50" p={8} borderRadius="lg">
+          <Box bg="#F7F3E9" p={8} borderRadius="lg">
             <Heading as="h2" size="lg" mb={6} color="gray.700">
               Información de contacto
             </Heading>
@@ -60,7 +60,7 @@ const Contacto = () => {
             <Flex direction="column" gap={6}>
               <Flex align="start" gap={4}>
                 <Box pt={1}>
-                  <FaMapMarkerAlt size={20} color="#3182CE" />
+                  <FaMapMarkerAlt size={20} color="#7F5539" />
                 </Box>
                 <Box>
                   <Text fontWeight="600" mb={1}>Oficina Central</Text>
@@ -70,18 +70,18 @@ const Contacto = () => {
               </Flex>
 
               <Flex align="center" gap={4}>
-                <FaPhone size={20} color="#3182CE" />
+                <FaPhone size={20} color="#7F5539" />
                 <Text>+54 11 1234-5678</Text>
               </Flex>
 
               <Flex align="center" gap={4}>
-                <FaEnvelope size={20} color="#3182CE" />
+                <FaEnvelope size={20} color="#7F5539" />
                 <Text>contacto@rentafacil.com</Text>
               </Flex>
 
               <Flex align="start" gap={4}>
                 <Box pt={1}>
-                  <FaClock size={20} color="#3182CE" />
+                  <FaClock size={20} color="#7F5539" />
                 </Box>
                 <Box>
                   <Text fontWeight="600">Horario de atención:</Text>
@@ -98,10 +98,10 @@ const Contacto = () => {
             </Heading>
             <Flex gap={4}>
               <Link href="#" _hover={{ opacity: 0.7 }}>
-                <FaFacebook size={28} color="#3182CE" />
+                <FaFacebook size={28} color="#7F5539" />
               </Link>
               <Link href="#" _hover={{ opacity: 0.7 }}>
-                <FaInstagram size={28} color="#3182CE" />
+                <FaInstagram size={28} color="#7F5539" />
               </Link>
             </Flex>
           </Box>
@@ -187,7 +187,7 @@ const Contacto = () => {
       </Box>
 
       {/* Preguntas Frecuentes */}
-      <Box bg="blue.50" p={8} borderRadius="lg">
+      <Box bg="#F7F3E9" p={8} borderRadius="lg">
         <Heading as="h2" size="lg" mb={6} color="gray.700">
           Preguntas frecuentes
         </Heading>
